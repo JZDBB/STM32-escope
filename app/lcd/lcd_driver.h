@@ -27,8 +27,8 @@ typedef struct
 #define BLUE         	   0xFFE0
 #define BRED             0XF81F
 #define GRED 			       0XFFE0
-#define GBLUE			       0X07FF
-#define RED           	 0xF800
+#define GBLUE			       0XF800
+#define RED           	 0x07FF
 #define MAGENTA       	 0xF81F
 #define PINK          	 0x07E0
 #define GREEN            0xF81F

@@ -15,6 +15,9 @@ u8 ad_flag = 1;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
 u16 vpp;
+u8 arr_V[10] = "100mV/div";
+u8 arr_f[10] = "  5us/div";
+u8 arr_move[8] = " mov_ver";
 				
 void set_io0(void)					  										
 {
@@ -182,20 +185,29 @@ void set_background(void)
 	LCD_DrawRectangle(0,0,300,200,POINT_COLOR);
 	GUI_Line(0,100,300,100,POINT_COLOR);
 	GUI_Line(150,0,150,200,POINT_COLOR);
-	POINT_COLOR=BLUE;
-	//GUI_Box(260,10,260+57,210,BLACK);
+
+	POINT_COLOR=RED;
 	LCD_DrawRectangle(302,0,398,200,WHITE);
-	//GUI_Show12ASCII(0,224,"www.prechin.com",POINT_COLOR,WHITE);
+	GUI_Show12ASCII(312,5,"V:",POINT_COLOR,BLACK);
+	//GUI_Show12ASCII(274,210,"Vmax:",POINT_COLOR,YELLOW);
+	//GUI_Show12ASCII(274,210,"Vmin:",POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(312,45,"Vpp:",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(312,95,"Freq:",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(312,145,"duty:",POINT_COLOR,BLACK);
+
+
+	POINT_COLOR=BLUE;
 	LCD_DrawRectangle(0,202,398,236,GREEN);
-	GUI_Show12ASCII(2,210,"vpp=0000mV",POINT_COLOR,WHITE);	
-	GUI_Show12ASCII(150,210,"Vmax=0000mV",POINT_COLOR,WHITE);
-	GUI_Show12ASCII(303,10,"us/div:",POINT_COLOR,WHITE);
-	GUI_Show12ASCII(303,50,"mv/div:",POINT_COLOR,WHITE);
-	GUI_Show12ASCII(303,90,"mov_ver",POINT_COLOR,WHITE);
-	GUI_Show12ASCII(303,111,"mov_hor",POINT_COLOR,WHITE);
-	GUI_Show12ASCII(303,131,"load",POINT_COLOR,WHITE);
-	//GUI_Show12ASCII(260,140,"PA2:",POINT_COLOR,YELLOW);	
-	//GUI_Show12ASCII(260,160,"ADC1_In",POINT_COLOR,YELLOW);
+	GUI_Box(2,205,76,230,YELLOW);
+	GUI_Box(92,205,166,230,YELLOW);
+	GUI_Box(182,205,256,230,YELLOW);
+	GUI_Box(272,205,346,230,YELLOW);
+	LCD_DrawRectangle(2,205,76,230,RED);
+	GUI_Show12ASCII(4,210,arr_V,POINT_COLOR,YELLOW);	
+	GUI_Show12ASCII(94,210,arr_f,POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(184,210,arr_move,POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(274,210,"load data",POINT_COLOR,YELLOW);
+
 }
 
 void key_init(void)
@@ -234,13 +246,38 @@ void EXTI0_IRQHandler(void)
 	{
 		mode++;
 		led0=0;
-		if(mode == 2)mode = 0;
+		if(mode == 4)mode = 0;
 		if(mode == 0)
 		{
-			GUI_Show12ASCII(260,224,"f",POINT_COLOR,WHITE);
+			//GUI_Show12ASCII(260,224,"f",POINT_COLOR,WHITE);
+			LCD_DrawRectangle(2,205,76,230,RED);
+			LCD_DrawRectangle(92,205,166,230,YELLOW);
+			LCD_DrawRectangle(182,205,256,230,YELLOW);
+			LCD_DrawRectangle(272,205,346,230,YELLOW);
 		}
-		else GUI_Show12ASCII(260,224,"v",POINT_COLOR,WHITE);
+		else if(mode == 1)//GUI_Show12ASCII(260,224,"v",POINT_COLOR,WHITE);
+		{
+			LCD_DrawRectangle(2,205,76,230,YELLOW);
+			LCD_DrawRectangle(92,205,166,230,RED);
+			LCD_DrawRectangle(182,205,256,230,YELLOW);
+			LCD_DrawRectangle(272,205,346,230,YELLOW);
+		}
+		else if(mode ==2)
+		{
+			LCD_DrawRectangle(2,205,76,230,YELLOW);
+			LCD_DrawRectangle(92,205,166,230,YELLOW);
+			LCD_DrawRectangle(182,205,256,230,RED);
+			LCD_DrawRectangle(272,205,346,230,YELLOW);
+		}
+		else if(mode ==3)
+		{
+			LCD_DrawRectangle(2,205,76,230,YELLOW);
+			LCD_DrawRectangle(92,205,166,230,YELLOW);
+			LCD_DrawRectangle(182,205,256,230,YELLOW);
+			LCD_DrawRectangle(272,205,346,230,RED);
+		}
 	}
+	
 	EXTI_ClearITPendingBit(EXTI_Line0);
 	POINT_COLOR = yan_se1;
 }	   
@@ -362,7 +399,7 @@ void TIM2_IRQHandler(void)
 		vcc_div_buf[6]=vcc_div%1000000%100000%10000%1000%100%10+0x30;
 		vcc_div_buf[7]='\0';
 		yan_se = POINT_COLOR;
-		POINT_COLOR=RED;
+		POINT_COLOR=BLUE;
 		if(frequency>20000)
 		{
 			frequency_flag = 1;	
@@ -372,17 +409,19 @@ void TIM2_IRQHandler(void)
 			frequency_flag = 0;			
 		}
 
-		/*if(num_shao_miao>7)
+/*		if(num_shao_miao>7)
 		{
-			GUI_Show12ASCII(260,10,"us/div:",POINT_COLOR,WHITE);
-			GUI_Show12ASCII(260,26,shao_miao_shu_du_buf,POINT_COLOR,WHITE);
+			GUI_Show12ASCII(303,10,"us/div:",POINT_COLOR,WHITE);
+			GUI_Show12ASCII(303,26,shao_miao_shu_du_buf,POINT_COLOR,WHITE);
 		}
 		else
 		{
-			GUI_Show12ASCII(260,10,"ns/div:",POINT_COLOR,WHITE);
-			GUI_Show12ASCII(260,26,shao_miao_shu_du_buf,POINT_COLOR,WHITE);
+			GUI_Show12ASCII(303,10,"ns/div:",POINT_COLOR,WHITE);
+			GUI_Show12ASCII(303,26,shao_miao_shu_du_buf,POINT_COLOR,WHITE);
 		}
-		//GUI_Show12ASCII(260,106,vcc_div_buf,POINT_COLOR,WHITE);	*/			
+		GUI_Show12ASCII(303,66,vcc_div_buf,POINT_COLOR,WHITE);	*/
+
+		
 		POINT_COLOR=yan_se;
 
 		count = 0;
