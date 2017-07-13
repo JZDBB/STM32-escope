@@ -15,8 +15,12 @@ u8 ad_flag = 1;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
 u16 vpp;
-u8 arr_V[10] = "100mV/div";
-u8 arr_f[10] = "  5us/div";
+
+u8 arr_V[9][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
+u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
+
+//u8 arr_V[10] = "100mV/div";
+//u8 arr_f[10] = "  5us/div";
 u8 arr_move[8] = " mov_ver";
 				
 void set_io0(void)					  										
@@ -203,8 +207,8 @@ void set_background(void)
 	GUI_Box(182,205,256,230,YELLOW);
 	GUI_Box(272,205,346,230,YELLOW);
 	LCD_DrawRectangle(2,205,76,230,RED);
-	GUI_Show12ASCII(4,210,arr_V,POINT_COLOR,YELLOW);	
-	GUI_Show12ASCII(94,210,arr_f,POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(4,210,arr_V[0],POINT_COLOR,YELLOW);	
+	GUI_Show12ASCII(94,210,arr_F[0],POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(184,210,arr_move,POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(274,210,"load data",POINT_COLOR,YELLOW);
 
@@ -290,13 +294,22 @@ void EXTI3_IRQHandler(void)
 	{
 		if(mode == 0)
 		{
-			num_shao_miao++;
-			if(num_shao_miao == 22)num_shao_miao = 1;
-		}
-		else 
-		{	
 			num_fu_du++;
 			if(num_fu_du==12)num_fu_du=1;
+		}
+		else if(mode==1)
+		{	
+			num_shao_miao++;
+			if(num_shao_miao == 14)num_shao_miao = 1;
+			
+		}
+		else if(mode==2)
+		{
+			
+		}
+		else if(mode==3)
+		{
+			
 		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line3);
@@ -310,14 +323,22 @@ void EXTI4_IRQHandler(void)
 	{
 		if(mode == 0)
 		{
-			num_shao_miao--;
-			if(num_shao_miao == 0)num_shao_miao = 21;
-		}
-		else 
-		{
-					
 			num_fu_du--;
 			if(num_fu_du==0)num_fu_du=11;
+		}
+		else if(mode==1)
+		{	
+			num_shao_miao--;
+			if(num_shao_miao == 0)num_shao_miao = 13;
+			
+		}
+		else if(mode==2)
+		{
+			
+		}
+		else if(mode==3)
+		{
+			
 		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line4);
@@ -327,27 +348,28 @@ void TIM2_IRQHandler(void)
 {
 	u16 temple;
 	u16 yan_se;
-	u8 shao_miao_shu_du_buf[8],vcc_div_buf[8];
+	u8 shao_miao_shu_du_buf[5],vcc_div_buf[8];
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update))
 	{
 		TIM_Cmd(TIM3,DISABLE);
 		TIM_Cmd(TIM2,DISABLE);
 
-   		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+   	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 		temple = TIM_GetCounter(TIM3);
 		frequency = 65536*count+ temple;
 		frequency = frequency - frequency*(130.10/1000000);
 
 		switch(num_shao_miao)
 		{
-			case 1:shao_miao_shu_du = 347;gao_pin_palus = 1;break;
+			/*case 1:shao_miao_shu_du = 347;gao_pin_palus = 1;break;
+			
 			case 2:shao_miao_shu_du = 694;gao_pin_palus = 2;break;
 			case 3:shao_miao_shu_du = 1736;gao_pin_palus = 5;break;
 			case 4:shao_miao_shu_du = 3472;gao_pin_palus = 10;break;
 			case 5:shao_miao_shu_du = 6944;gao_pin_palus = 20;break;
 			case 6:shao_miao_shu_du = 17361;gao_pin_palus = 50;break;
 			case 7:shao_miao_shu_du = 34722;gao_pin_palus = 100;break;	  
-			case 8:shao_miao_shu_du = 50;break;		  //分界点，
+			case 8:shao_miao_shu_du = 50;break;		  //分界点
 			case 9:shao_miao_shu_du = 100;break;
 			case 10:shao_miao_shu_du = 200;break;
 			case 11:shao_miao_shu_du = 500;break;
@@ -360,9 +382,20 @@ void TIM2_IRQHandler(void)
 			case 18:shao_miao_shu_du = 100000;break;
 			case 19:shao_miao_shu_du = 200000;break;
 			case 20:shao_miao_shu_du = 500000;break;
-			case 21:shao_miao_shu_du = 1000000;break;
-
-
+			case 21:shao_miao_shu_du = 1000000;break;*/
+			case 1:shao_miao_shu_du = 5;break;
+			case 2:shao_miao_shu_du = 10;break;	
+			case 3:shao_miao_shu_du = 20;break;	
+			case 4:shao_miao_shu_du = 50;break;		  //分界点
+			case 5:shao_miao_shu_du = 100;break;
+			case 6:shao_miao_shu_du = 200;break;
+			case 7:shao_miao_shu_du = 500;break;
+			case 8:shao_miao_shu_du = 1000;break;
+			case 9:shao_miao_shu_du = 2000;break;
+			case 10:shao_miao_shu_du = 5000;break;
+			case 11:shao_miao_shu_du = 10000;break;
+			case 12:shao_miao_shu_du = 20000;break;
+			case 13:shao_miao_shu_du = 50000;break;
 			default :break;
 		}
 		switch(num_fu_du)
@@ -381,15 +414,61 @@ void TIM2_IRQHandler(void)
 			default :break;
 		}
 
-		shao_miao_shu_du_buf[0]=shao_miao_shu_du/1000000+0x30;
+		/*shao_miao_shu_du_buf[0]=shao_miao_shu_du/1000000+0x30;
 		shao_miao_shu_du_buf[1]=shao_miao_shu_du%1000000/100000+0x30;
 		shao_miao_shu_du_buf[2]=shao_miao_shu_du%1000000%100000/10000+0x30;
 		shao_miao_shu_du_buf[3]=shao_miao_shu_du%1000000%100000%10000/1000+0x30;
 		shao_miao_shu_du_buf[4]=shao_miao_shu_du%1000000%100000%10000%1000/100+0x30;
 		shao_miao_shu_du_buf[5]=shao_miao_shu_du%1000000%100000%10000%1000%100/10+0x30;
 		shao_miao_shu_du_buf[6]=shao_miao_shu_du%1000000%100000%10000%1000%100%10+0x30;
-		shao_miao_shu_du_buf[7]='\0';
-
+		shao_miao_shu_du_buf[7]='\0';*/
+		
+/*		if(num_shao_miao>7)
+		{
+			shao_miao_shu_du_buf[3] = 109;
+			shao_miao_shu_du_buf[0]=32;
+			shao_miao_shu_du_buf[1] = 32;
+			shao_miao_shu_du_buf[2] = 32;
+			if(shao_miao_shu_du<10)
+			{
+				shao_miao_shu_du_buf[2] = shao_miao_shu_du+48;
+			}
+			else if(shao_miao_shu_du<100)
+			{
+				shao_miao_shu_du_buf[1] = shao_miao_shu_du/10+48;
+				shao_miao_shu_du_buf[2] = 48;
+			}
+			else
+			{
+				shao_miao_shu_du_buf[0] = shao_miao_shu_du/100+48;
+				shao_miao_shu_du_buf[1] = (shao_miao_shu_du/10)%10+48;
+				shao_miao_shu_du_buf[2] = shao_miao_shu_du%10+48;
+			}
+		}
+		else
+		{
+			shao_miao_shu_du_buf[3] = 117;
+			shao_miao_shu_du_buf[0]=32;
+			shao_miao_shu_du_buf[1] = 32;
+			shao_miao_shu_du_buf[2] = 32;
+			if(shao_miao_shu_du<10)
+			{
+				shao_miao_shu_du_buf[2] = shao_miao_shu_du+48;
+			}
+			else if(shao_miao_shu_du<100)
+			{
+				shao_miao_shu_du_buf[1] = shao_miao_shu_du/10+48;
+				shao_miao_shu_du_buf[2] = 48;
+			}
+			else
+			{
+				shao_miao_shu_du_buf[0] = shao_miao_shu_du/100+48;
+				shao_miao_shu_du_buf[1] = (shao_miao_shu_du/10)%10+48;
+				shao_miao_shu_du_buf[2] = shao_miao_shu_du%10+48;
+			}
+		}
+		shao_miao_shu_du_buf[4] = '\0';
+*/
 		vcc_div_buf[0]=vcc_div/1000000+0x30;
 		vcc_div_buf[1]=vcc_div%1000000/100000+0x30;
 		vcc_div_buf[2]=vcc_div%1000000%100000/10000+0x30;
@@ -408,18 +487,8 @@ void TIM2_IRQHandler(void)
 		{
 			frequency_flag = 0;			
 		}
-
-/*		if(num_shao_miao>7)
-		{
-			GUI_Show12ASCII(303,10,"us/div:",POINT_COLOR,WHITE);
-			GUI_Show12ASCII(303,26,shao_miao_shu_du_buf,POINT_COLOR,WHITE);
-		}
-		else
-		{
-			GUI_Show12ASCII(303,10,"ns/div:",POINT_COLOR,WHITE);
-			GUI_Show12ASCII(303,26,shao_miao_shu_du_buf,POINT_COLOR,WHITE);
-		}
-		GUI_Show12ASCII(303,66,vcc_div_buf,POINT_COLOR,WHITE);	*/
+		
+		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],POINT_COLOR,YELLOW);
 
 		
 		POINT_COLOR=yan_se;

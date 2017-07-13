@@ -143,6 +143,8 @@ void gpio_init(void)
 int main(void)
 {	
 	u8 vpp_buf[6];
+	u8 v_buf[6];
+	u16 vol;
 	delay_init();
 	rcc_init();			   //外设时钟配置	
 	led_init();				
@@ -157,7 +159,7 @@ int main(void)
 	 
 	time_init();			//定时器配置，测频率用的二个定时器
 	time_enable();			//同步开始计数
-	ADC_Get_Value();
+	ADC_Get_Value();//用时很久？
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{	
@@ -184,7 +186,7 @@ int main(void)
 			}
 			lcd_huadian(j-index,temp,POINT_COLOR);				
 			lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);		
-			hua_wang();		 
+			hua_wang();	
 		}
 		vpp_buf[0]=vpp/10000+0x30;
 		vpp_buf[1]=vpp%10000/1000+0x30;		
@@ -192,8 +194,16 @@ int main(void)
 		vpp_buf[3]=vpp%10000%1000%100/10+0x30;
 		vpp_buf[4]=vpp%10000%1000%100%10+0x30;
 		vpp_buf[5]='\0';
-		//GUI_Show12ASCII(164,224,vpp_buf,POINT_COLOR,WHITE);		
+		vol = a[j + 1] * 3300 / 4095;
+		v_buf[0] = vol/10000+48;
+		v_buf[1] = vol%10000/1000+48;
+		v_buf[2] = vol%10000%1000/100+48;
+		v_buf[3] = vol%10000%1000%100/10+48;
+		v_buf[4] = vol%10000%1000%100%10+48;
+		v_buf[5] = '\0';
+		GUI_Show12ASCII(312,62,vpp_buf,POINT_COLOR,BLACK);	
+		GUI_Show12ASCII(312,22,v_buf,POINT_COLOR,BLACK);
 		ADC_Get_Value();
-		vpp = ADC_Get_Vpp();	
+		vpp = ADC_Get_Vpp();
 	}
 }
