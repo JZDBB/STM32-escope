@@ -159,7 +159,7 @@ int main(void)
 	 
 	time_init();			//定时器配置，测频率用的二个定时器
 	time_enable();			//同步开始计数
-	ADC_Get_Value();//用时很久？
+	ADC_Get_Value();
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{	
@@ -167,7 +167,7 @@ int main(void)
 		{
       temp = a[j] * 3300 / 4096  *  25 /vcc_div;
 			temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
-			clear_point(j-index);	
+			clear_point(j-index);
 			if(temp>200)
 			{
 				temp=200;	
@@ -185,7 +185,7 @@ int main(void)
 				temp1=0;	
 			}
 			lcd_huadian(j-index,temp,POINT_COLOR);				
-			lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);		
+			lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
 			hua_wang();	
 		}
 		vpp_buf[0]=vpp/10000+0x30;

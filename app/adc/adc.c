@@ -75,7 +75,7 @@ void ADC_Get_Value(void)								 //得到数据，
 	TIM_PrescalerConfig(TIM1,71,TIM_PSCReloadMode_Immediate);
 		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
 		
-	TIM_SetAutoreload(TIM1, shao_miao_shu_du-1); //设定扫描速度
+	TIM_SetAutoreload(TIM1, shao_miao_shu_du/30-1); //设定扫描速度
 	
 	
 	//}

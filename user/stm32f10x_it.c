@@ -8,16 +8,17 @@
 #include "led.h"
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
-u8 num_shao_miao = 8;
+u8 num_shao_miao = 1;
 u8 mode = 0;
-u8 num_fu_du =7;
+u8 num_fu_du =1;
 u8 ad_flag = 1;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
 u16 vpp;
 
-u8 arr_V[9][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
-u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
+
+static u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
+static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
 
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
@@ -36,7 +37,6 @@ void set_io1(void)
 {
 	GPIO_SetBits(GPIOA,GPIO_Pin_3);
 	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
 	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
 	GPIO_ResetBits(GPIOA,GPIO_Pin_5);
 	GPIO_ResetBits(GPIOA,GPIO_Pin_6);     
@@ -46,7 +46,6 @@ void set_io2(void)
 {
 	GPIO_SetBits(GPIOA,GPIO_Pin_3);
 	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
 	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
 	GPIO_ResetBits(GPIOA,GPIO_Pin_5);
 	GPIO_SetBits(GPIOA,GPIO_Pin_6);     
@@ -192,12 +191,12 @@ void set_background(void)
 
 	POINT_COLOR=RED;
 	LCD_DrawRectangle(302,0,398,200,WHITE);
-	GUI_Show12ASCII(312,5,"V:",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(312,5,"V(V):",POINT_COLOR,BLACK);
 	//GUI_Show12ASCII(274,210,"Vmax:",POINT_COLOR,YELLOW);
 	//GUI_Show12ASCII(274,210,"Vmin:",POINT_COLOR,YELLOW);
-	GUI_Show12ASCII(312,45,"Vpp:",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(312,95,"Freq:",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(312,145,"duty:",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(312,45,"Vpp(V):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(312,95,"Freq(Hz):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(312,145,"duty(%):",POINT_COLOR,BLACK);
 
 
 	POINT_COLOR=BLUE;
@@ -295,7 +294,7 @@ void EXTI3_IRQHandler(void)
 		if(mode == 0)
 		{
 			num_fu_du++;
-			if(num_fu_du==12)num_fu_du=1;
+			if(num_fu_du==7)num_fu_du=1;
 		}
 		else if(mode==1)
 		{	
@@ -324,7 +323,7 @@ void EXTI4_IRQHandler(void)
 		if(mode == 0)
 		{
 			num_fu_du--;
-			if(num_fu_du==0)num_fu_du=11;
+			if(num_fu_du==0)num_fu_du=6;
 		}
 		else if(mode==1)
 		{	
@@ -348,7 +347,7 @@ void TIM2_IRQHandler(void)
 {
 	u16 temple;
 	u16 yan_se;
-	u8 shao_miao_shu_du_buf[5],vcc_div_buf[8];
+	//u8 shao_miao_shu_du_buf[5],vcc_div_buf[8];
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update))
 	{
 		TIM_Cmd(TIM3,DISABLE);
@@ -400,7 +399,7 @@ void TIM2_IRQHandler(void)
 		}
 		switch(num_fu_du)
 		{
-			case 1:vcc_div=1000;set_io1();break;
+/*			case 1:vcc_div=1000;set_io1();break;
 			case 2:vcc_div=950;set_io2();break;
 			case 3:vcc_div=900;set_io3();break;
 			case 4:vcc_div=800;set_io4();break;
@@ -410,7 +409,15 @@ void TIM2_IRQHandler(void)
 			case 8:vcc_div=400;set_io8();break;
 			case 9:vcc_div=300;set_io9();break;
 			case 10:vcc_div=200;set_io10();break;
-			case 11:vcc_div=100;set_io11();break;
+			case 11:vcc_div=100;set_io11();break;*/
+			
+			case 1:vcc_div=100;set_io11();break;
+			case 2:vcc_div=200;set_io10();break;
+			case 3:vcc_div=500;set_io7();break;
+			case 4:vcc_div=1000;set_io1();break;
+			case 5:vcc_div=2000;set_io1();break;
+			case 6:vcc_div=5000;set_io1();break;
+			
 			default :break;
 		}
 
@@ -468,7 +475,7 @@ void TIM2_IRQHandler(void)
 			}
 		}
 		shao_miao_shu_du_buf[4] = '\0';
-*/
+
 		vcc_div_buf[0]=vcc_div/1000000+0x30;
 		vcc_div_buf[1]=vcc_div%1000000/100000+0x30;
 		vcc_div_buf[2]=vcc_div%1000000%100000/10000+0x30;
@@ -476,7 +483,9 @@ void TIM2_IRQHandler(void)
 		vcc_div_buf[4]=vcc_div%1000000%100000%10000%1000/100+0x30;
 		vcc_div_buf[5]=vcc_div%1000000%100000%10000%1000%100/10+0x30;
 		vcc_div_buf[6]=vcc_div%1000000%100000%10000%1000%100%10+0x30;
-		vcc_div_buf[7]='\0';
+		vcc_div_buf[7]='\0';*/
+		
+		
 		yan_se = POINT_COLOR;
 		POINT_COLOR=BLUE;
 		if(frequency>20000)
@@ -489,8 +498,8 @@ void TIM2_IRQHandler(void)
 		}
 		
 		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],POINT_COLOR,YELLOW);
+		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],POINT_COLOR,YELLOW);
 
-		
 		POINT_COLOR=yan_se;
 
 		count = 0;
