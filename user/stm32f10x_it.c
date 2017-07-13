@@ -8,7 +8,7 @@
 #include "led.h"
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
-u8 num_shao_miao = 1;
+u8 num_shao_miao = 4;
 u8 mode = 0;
 u8 num_fu_du =1;
 u8 ad_flag = 1;

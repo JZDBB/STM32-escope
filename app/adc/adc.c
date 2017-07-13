@@ -69,17 +69,17 @@ void ADC_Get_Value(void)								 //得到数据，
 	float gao_pin_period = 0;
 	DMA1_Init();	                  
 	TIM_SetCounter(TIM1,0);	   //清空寄存器
-	//if(num_shao_miao>7)
+	//if(num_shao_miao>3)
 	//{
 		
-	TIM_PrescalerConfig(TIM1,71,TIM_PSCReloadMode_Immediate);
+	TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
 		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
 		
 	TIM_SetAutoreload(TIM1, shao_miao_shu_du/2-1); //设定扫描速度
 	
 	
-	//}
-	/*else
+	/*}
+	else
 	{
 		TIM_PrescalerConfig(TIM1,0,TIM_PSCReloadMode_Immediate);
 
