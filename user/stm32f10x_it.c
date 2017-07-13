@@ -347,7 +347,6 @@ void TIM2_IRQHandler(void)
 {
 	u16 temple;
 	u16 yan_se;
-	//u8 shao_miao_shu_du_buf[5],vcc_div_buf[8];
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update))
 	{
 		TIM_Cmd(TIM3,DISABLE);
@@ -417,7 +416,6 @@ void TIM2_IRQHandler(void)
 			case 4:vcc_div=1000;set_io1();break;
 			case 5:vcc_div=2000;set_io1();break;
 			case 6:vcc_div=5000;set_io1();break;
-			
 			default :break;
 		}
 

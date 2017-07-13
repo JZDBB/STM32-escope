@@ -142,9 +142,11 @@ void gpio_init(void)
 }
 int main(void)
 {	
-	u8 vpp_buf[6];
-	u8 v_buf[6];
+	u8 vpp_buf[7];
+	u8 v_buf[7];
 	u16 vol;
+	v_buf[2] = 46;
+	vpp_buf[2] = 46;
 	delay_init();
 	rcc_init();			   //Õ‚…Ë ±÷”≈‰÷√	
 	led_init();				
@@ -187,22 +189,22 @@ int main(void)
 			lcd_huadian(j-index,temp,POINT_COLOR);				
 			lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
 			hua_wang();	
+			vol = a[j + 1] * 3300 / 4095;
+			v_buf[0] = vol/10000+48;
+			v_buf[1] = vol%10000/1000+48;
+			v_buf[3] = vol%10000%1000/100+48;
+			v_buf[4] = vol%10000%1000%100/10+48;
+			v_buf[5] = vol%10000%1000%100%10+48;
+			v_buf[7] = '\0';
+			GUI_Show12ASCII(312,22,v_buf,POINT_COLOR,BLACK);
 		}
 		vpp_buf[0]=vpp/10000+0x30;
 		vpp_buf[1]=vpp%10000/1000+0x30;		
-		vpp_buf[2]=vpp%10000%1000/100+0x30;
-		vpp_buf[3]=vpp%10000%1000%100/10+0x30;
-		vpp_buf[4]=vpp%10000%1000%100%10+0x30;
-		vpp_buf[5]='\0';
-		vol = a[j + 1] * 3300 / 4095;
-		v_buf[0] = vol/10000+48;
-		v_buf[1] = vol%10000/1000+48;
-		v_buf[2] = vol%10000%1000/100+48;
-		v_buf[3] = vol%10000%1000%100/10+48;
-		v_buf[4] = vol%10000%1000%100%10+48;
-		v_buf[5] = '\0';
+		vpp_buf[3]=vpp%10000%1000/100+0x30;
+		vpp_buf[4]=vpp%10000%1000%100/10+0x30;
+		vpp_buf[5]=vpp%10000%1000%100%10+0x30;
+		vpp_buf[6]='\0';
 		GUI_Show12ASCII(312,62,vpp_buf,POINT_COLOR,BLACK);	
-		GUI_Show12ASCII(312,22,v_buf,POINT_COLOR,BLACK);
 		ADC_Get_Value();
 		vpp = ADC_Get_Vpp();
 	}

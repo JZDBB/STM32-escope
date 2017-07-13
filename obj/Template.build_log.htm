@@ -27,6 +27,11 @@ Project File Date:  07/12/2017
 <h2>Output:</h2>
 Rebuild target 'Target 1'
 compiling main.c...
+main.c(198): warning:  #175-D: subscript out of range
+                        v_buf[7] = '\0';
+main.c(211): warning: C4488E: write to variable 'v_buf' with offset out of bounds
+}
+main.c: 2 warnings, 0 errors
 compiling stm32f10x_it.c...
 compiling system_stm32f10x.c...
 compiling delay.c...
@@ -63,9 +68,9 @@ compiling adc.c...
         float gao_pin_period = 0;
 ..\app\adc\adc.c: 1 warning, 0 errors
 linking...
-Program Size: Code=20960 RO-data=2712 RW-data=320 ZI-data=3112  
+Program Size: Code=20964 RO-data=2712 RW-data=320 ZI-data=3112  
 FromELF: creating hex file...
-"..\obj\Template.axf" - 0 Error(s), 1 Warning(s).
+"..\obj\Template.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   C:\Users\ynbb\Desktop\电设\简易示波器\user\RTE
