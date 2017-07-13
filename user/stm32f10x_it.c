@@ -505,7 +505,7 @@ void TIM2_IRQHandler(void)
 		TIM_SetCounter(TIM3,0);
 
 		TIM_Cmd(TIM2,ENABLE);
-     	TIM_Cmd(TIM3,ENABLE);
+    TIM_Cmd(TIM3,ENABLE);
 		led0=!led0;	  
 	}
 }

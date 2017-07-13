@@ -39,7 +39,7 @@ void time1_init(void)
 	TIM_TimeBaseInitTypeDef    TIM_TimeBaseInitTypeStruct;
 	TIM_OCInitTypeDef TIM_OCInitTypeStruct;		 
 
-	TIM_TimeBaseInitTypeStruct.TIM_Prescaler = 71; //72分频
+	TIM_TimeBaseInitTypeStruct.TIM_Prescaler = 55; //56分频
 	TIM_TimeBaseInitTypeStruct.TIM_CounterMode = TIM_CounterMode_Up; //增计数
 	TIM_TimeBaseInitTypeStruct.TIM_Period =	1;	//自动重装值，1us触发一次						  
 	TIM_TimeBaseInitTypeStruct.TIM_ClockDivision = TIM_CKD_DIV1;//时钟不分频
