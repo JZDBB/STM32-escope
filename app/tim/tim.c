@@ -7,7 +7,7 @@ void time2_init(void)
 {					 
 	TIM_TimeBaseInitTypeDef    TIM_TimeBaseInitTypeStruct;		 
 
-	TIM_TimeBaseInitTypeStruct.TIM_Prescaler = 7199;  //tim2  72000000 10us
+	TIM_TimeBaseInitTypeStruct.TIM_Prescaler = 5599;  //tim2  72000000 10us
 	TIM_TimeBaseInitTypeStruct.TIM_CounterMode = TIM_CounterMode_Up;//Ôö¼ÆÊý
 	TIM_TimeBaseInitTypeStruct.TIM_Period =	9999+1;		//10000  100ms					  
 	TIM_TimeBaseInitTypeStruct.TIM_ClockDivision = TIM_CKD_DIV1;

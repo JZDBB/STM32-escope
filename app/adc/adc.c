@@ -10,6 +10,7 @@ u16 index = 0;
 u16 index1 = 0;
 
 
+
 void DMA1_Init(void)
 {
 	DMA_InitTypeDef  DMA_InitTypeStruct;
@@ -65,29 +66,26 @@ void ADC1_Init(void)									 //adc初始化
 
 void ADC_Get_Value(void)								 //得到数据，
 {
-	
 	float gao_pin_period = 0;
 	DMA1_Init();	                  
 	TIM_SetCounter(TIM1,0);	   //清空寄存器
-	//if(num_shao_miao>3)
-	//{
-		
-	TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
+	if(num_shao_miao>3)
+	{	
+		TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
 		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
-		
-	TIM_SetAutoreload(TIM1, shao_miao_shu_du/2-1); //设定扫描速度
-	
-	
-	/*}
+		TIM_SetAutoreload(TIM1, shao_miao_shu_du/25-1); //设定扫描速度
+	}
 	else
 	{
-		TIM_PrescalerConfig(TIM1,0,TIM_PSCReloadMode_Immediate);
-
-		gao_pin_period = 288000000.0/frequency +gao_pin_palus-1;
-
-		TIM_SetCompare1(TIM1, gao_pin_period);
-		TIM_SetAutoreload(TIM1,gao_pin_period);	
-	}*/
+		//TIM_PrescalerConfig(TIM1,0,TIM_PSCReloadMode_Immediate);
+		//gao_pin_period = 288000000.0/frequency +gao_pin_palus-1;
+		//TIM_SetCompare1(TIM1, gao_pin_period);
+		//TIM_SetAutoreload(TIM1,gao_pin_period);	
+		
+		TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
+		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
+		TIM_SetAutoreload(TIM1, shao_miao_shu_du/25-1); //设定扫描速度
+	}
 	
 	TIM_Cmd(TIM1,ENABLE);
 	while(!DMA_GetFlagStatus(DMA1_FLAG_TC1));

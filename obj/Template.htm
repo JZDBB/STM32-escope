@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\obj\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Thu Jul 13 17:55:50 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Fri Jul 14 14:23:28 2017
 <BR><P>
 <H3>Maximum Stack Usage =        172 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -295,7 +295,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[54]"></a>main</STRONG> (Thumb, 934 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[54]"></a>main</STRONG> (Thumb, 932 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = main &rArr; hua_wang &rArr; LCD_DrawRectangle &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;time_init
@@ -422,7 +422,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[83]"></a>hua_wang</STRONG> (Thumb, 170 bytes, Stack size 16 bytes, stm32f10x_it.o(.text))
+<P><STRONG><a name="[83]"></a>hua_wang</STRONG> (Thumb, 162 bytes, Stack size 16 bytes, stm32f10x_it.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = hua_wang &rArr; LCD_DrawRectangle &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawRectangle
@@ -432,7 +432,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[79]"></a>set_background</STRONG> (Thumb, 434 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
+<P><STRONG><a name="[79]"></a>set_background</STRONG> (Thumb, 426 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = set_background &rArr; LCD_DrawRectangle &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawRectangle
@@ -463,26 +463,28 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_hd.o(RESET)
 </UL>
-<P><STRONG><a name="[16]"></a>EXTI3_IRQHandler</STRONG> (Thumb, 106 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = EXTI3_IRQHandler
+<P><STRONG><a name="[16]"></a>EXTI3_IRQHandler</STRONG> (Thumb, 176 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = EXTI3_IRQHandler &rArr; GUI_Show12ASCII &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI_ClearITPendingBit
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Show12ASCII
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_hd.o(RESET)
 </UL>
-<P><STRONG><a name="[17]"></a>EXTI4_IRQHandler</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = EXTI4_IRQHandler
+<P><STRONG><a name="[17]"></a>EXTI4_IRQHandler</STRONG> (Thumb, 170 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = EXTI4_IRQHandler &rArr; GUI_Show12ASCII &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI_ClearITPendingBit
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Show12ASCII
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_hd.o(RESET)
 </UL>
-<P><STRONG><a name="[29]"></a>TIM2_IRQHandler</STRONG> (Thumb, 624 bytes, Stack size 48 bytes, stm32f10x_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 100<LI>Call Chain = TIM2_IRQHandler &rArr; GUI_Show12ASCII &rArr; TFT_SetWindow
+<P><STRONG><a name="[29]"></a>TIM2_IRQHandler</STRONG> (Thumb, 558 bytes, Stack size 48 bytes, stm32f10x_it.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = TIM2_IRQHandler &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_SetCounter
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_GetITStatus
@@ -493,7 +495,6 @@ Global Symbols
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;set_io10
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;set_io7
 <LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;set_io1
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GUI_Show12ASCII
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2d
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2uiz
@@ -1708,7 +1709,8 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_SetWindow
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_WriteData_Color
 </UL>
-<BR>[Called By]<UL><LI><a href="#[29]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_IRQHandler
+<BR>[Called By]<UL><LI><a href="#[17]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI4_IRQHandler
+<LI><a href="#[16]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI3_IRQHandler
 <LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;set_background
 <LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1800,7 +1802,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[7c]"></a>ADC_Get_Value</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, adc.o(.text))
+<P><STRONG><a name="[7c]"></a>ADC_Get_Value</STRONG> (Thumb, 144 bytes, Stack size 16 bytes, adc.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72 + In Cycle
 <LI>Call Chain = ADC_Get_Value &rArr;  ADC_Get_Value (Cycle)
 </UL>

@@ -19,6 +19,7 @@ extern u8 ad_flag;
 extern u16 vpp;
 extern float gao_pin_palus;
 extern u16 vcc_div;
+extern u16 interval;
 
 void lcd_huadian(u16 a,u16 b,u16 color);
 void lcd_huaxian(u16 x1,u16 y1,u16 x2,u16 y2,u16 color);

@@ -26,6 +26,7 @@ float temp;
 float temp1;
 
 
+
 void clear_point(u16 hang)
 {
 	u8 index_clear_lie = 0; 
@@ -184,30 +185,61 @@ int main(void)
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{	
-		for(j=index;j<index+300;j++)
+		for(j=index;j<index+250;j++)
 		{
       temp = a[j] * 3300 / 4096  *  25 /vcc_div;
 			temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
-			clear_point(j-index);
-			if(temp>200)
+//			if(interval == 0)
+//			{
+				clear_point(j-index);
+				if(temp>200)
+				{
+					temp=200;	
+				}
+				if(temp<0)
+				{
+					temp=0;	
+				}
+				if(temp1>200)
+				{
+					temp1=200;	
+				}
+				if(temp1<0)
+				{
+					temp1=0;	
+				}
+				lcd_huadian(j-index,temp,POINT_COLOR);				
+				lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
+				hua_wang();	
+/*			}
+			else
 			{
-				temp=200;	
-			}
-			if(temp<0)
-			{
-				temp=0;	
-			}
-			if(temp1>200)
-			{
-				temp1=200;	
-			}
-			if(temp1<0)
-			{
-				temp1=0;	
-			}
-			lcd_huadian(j-index,temp,POINT_COLOR);				
-			lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
-			hua_wang();	
+				for(i = 0;i<interval;i++)
+				{
+					clear_point(j-index+interval);
+				}
+				//clear_point(j-index);
+				if(temp>200)
+				{
+					temp=200;	
+				}
+				if(temp<0)
+				{
+					temp=0;	
+				}
+				if(temp1>200)
+				{
+					temp1=200;	
+				}
+				if(temp1<0)
+				{
+					temp1=0;	
+				}
+				lcd_huadian(j-index,temp,POINT_COLOR);				
+				lcd_huaxian(j-index,temp,j-index+interval,temp1,POINT_COLOR);
+				hua_wang();
+				j = j+interval;
+			}*/
 			vol = a[j + 1] * 3300 / 4095;
 			v_buf[0] = vol/10000+48;
 			v_buf[1] = vol%10000/1000+48;
@@ -215,7 +247,7 @@ int main(void)
 			v_buf[4] = vol%10000%1000%100/10+48;
 			v_buf[5] = vol%10000%1000%100%10+48;
 			v_buf[7] = '\0';
-			GUI_Show12ASCII(312,22,v_buf,POINT_COLOR,BLACK);
+			GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
 		}
 		vpp_buf[0]=vpp/10000+0x30;
 		vpp_buf[1]=vpp%10000/1000+0x30;		
@@ -223,7 +255,7 @@ int main(void)
 		vpp_buf[4]=vpp%10000%1000%100/10+0x30;
 		vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 		vpp_buf[6]='\0';
-		GUI_Show12ASCII(312,62,vpp_buf,POINT_COLOR,BLACK);	
+		GUI_Show12ASCII(262,62,vpp_buf,POINT_COLOR,BLACK);	
 		ADC_Get_Value();
 		vpp = ADC_Get_Vpp();
 	}

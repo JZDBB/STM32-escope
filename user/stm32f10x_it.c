@@ -8,7 +8,7 @@
 #include "led.h"
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
-u8 num_shao_miao = 4;
+u8 num_shao_miao = 1;
 u8 mode = 0;
 u8 num_fu_du =1;
 u8 ad_flag = 1;
@@ -22,7 +22,8 @@ static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0
 
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
-u8 arr_move[8] = " mov_ver";
+u8 arr_move[10] = " mov_ver\0";
+u8 arr_freq[7] = "000000\0";
 				
 void set_io0(void)					  										
 {
@@ -159,7 +160,7 @@ void hua_wang(void)
 	u16 index_hang = 0;	
 
 	POINT_COLOR = BLUE;		
-	for(index_hang = 0;index_hang< 300;index_hang = index_hang + 30)
+	for(index_hang = 0;index_hang< 250;index_hang = index_hang + 25)
 	{
 		for(index_y = 0;index_y<200;index_y = index_y +5)
 		{
@@ -168,15 +169,15 @@ void hua_wang(void)
 	}	
 	for(index_hang = 0;index_hang<200;index_hang = index_hang + 25)
 	{
-		for(index_y = 0;index_y<300;index_y = index_y +5)
+		for(index_y = 0;index_y<250;index_y = index_y +5)
 		{
 			lcd_huadian(index_y,index_hang,POINT_COLOR);	
 		}
 	}
 	POINT_COLOR = BLUE;
-	LCD_DrawRectangle(0,0,300,200,POINT_COLOR);
-	GUI_Line(0,100,300,100,POINT_COLOR);
-	GUI_Line(150,0,150,200,POINT_COLOR);
+	LCD_DrawRectangle(0,0,250,200,POINT_COLOR);
+	GUI_Line(0,100,250,100,POINT_COLOR);
+	GUI_Line(125,0,125,200,POINT_COLOR);
 	POINT_COLOR=RED;
 }
 
@@ -185,19 +186,18 @@ void set_background(void)
 	POINT_COLOR = BLUE;
   TFT_ClearScreen(BLACK);
 	
-	LCD_DrawRectangle(0,0,300,200,POINT_COLOR);
-	GUI_Line(0,100,300,100,POINT_COLOR);
-	GUI_Line(150,0,150,200,POINT_COLOR);
+	LCD_DrawRectangle(0,0,250,200,POINT_COLOR);
+	GUI_Line(0,100,250,100,POINT_COLOR);
+	GUI_Line(125,0,125,200,POINT_COLOR);
 
 	POINT_COLOR=RED;
-	LCD_DrawRectangle(302,0,398,200,WHITE);
-	GUI_Show12ASCII(312,5,"V(V):",POINT_COLOR,BLACK);
+	LCD_DrawRectangle(252,0,398,200,RED);
+	GUI_Show12ASCII(262,5,"V(V):",POINT_COLOR,BLACK);
 	//GUI_Show12ASCII(274,210,"Vmax:",POINT_COLOR,YELLOW);
 	//GUI_Show12ASCII(274,210,"Vmin:",POINT_COLOR,YELLOW);
-	GUI_Show12ASCII(312,45,"Vpp(V):",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(312,95,"Freq(Hz):",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(312,145,"duty(%):",POINT_COLOR,BLACK);
-
+	GUI_Show12ASCII(262,45,"Vpp(V):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(262,95,"Freq(Hz):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(262,145,"duty(%):",POINT_COLOR,BLACK);
 
 	POINT_COLOR=BLUE;
 	LCD_DrawRectangle(0,202,398,236,GREEN);
@@ -210,7 +210,6 @@ void set_background(void)
 	GUI_Show12ASCII(94,210,arr_F[0],POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(184,210,arr_move,POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(274,210,"load data",POINT_COLOR,YELLOW);
-
 }
 
 void key_init(void)
@@ -310,6 +309,8 @@ void EXTI3_IRQHandler(void)
 		{
 			
 		}
+		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
+		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
 	}
 	EXTI_ClearITPendingBit(EXTI_Line3);
 }
@@ -340,6 +341,9 @@ void EXTI4_IRQHandler(void)
 			
 		}
 	}
+	
+	GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
+	GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
 	EXTI_ClearITPendingBit(EXTI_Line4);
 }
 
@@ -356,6 +360,13 @@ void TIM2_IRQHandler(void)
 		temple = TIM_GetCounter(TIM3);
 		frequency = 65536*count+ temple;
 		frequency = frequency - frequency*(130.10/1000000);
+		/*arr_freq[0] = frequency/100000+48;
+		arr_freq[1] = frequency%100000/10000+48;
+		arr_freq[2] = frequency%100000%10000/1000+48;
+		arr_freq[3] = frequency%100000%10000%1000/100+48;
+		arr_freq[4] = frequency%100000%10000%1000%100/10+48;
+		arr_freq[5] = frequency%100000%10000%1000%100%10+48;
+		GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);*/
 
 		switch(num_shao_miao)
 		{
@@ -381,9 +392,9 @@ void TIM2_IRQHandler(void)
 			case 19:shao_miao_shu_du = 200000;break;
 			case 20:shao_miao_shu_du = 500000;break;
 			case 21:shao_miao_shu_du = 1000000;break;*/
-			case 1:shao_miao_shu_du = 5;break;
-			case 2:shao_miao_shu_du = 10;break;	
-			case 3:shao_miao_shu_du = 20;break;	
+			case 1:shao_miao_shu_du = 5000;//gao_pin_palus = 20;break;//shao_miao_shu_du = 5;break;
+			case 2:shao_miao_shu_du = 10000;//gao_pin_palus = 50;break;//shao_miao_shu_du = 10;break;	
+			case 3:shao_miao_shu_du = 20000;//gao_pin_palus = 50;break;//shao_miao_shu_du = 20;break;	
 			case 4:shao_miao_shu_du = 50;break;		  //·Ö½çµã
 			case 5:shao_miao_shu_du = 100;break;
 			case 6:shao_miao_shu_du = 200;break;
@@ -495,8 +506,7 @@ void TIM2_IRQHandler(void)
 			frequency_flag = 0;			
 		}
 		
-		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],POINT_COLOR,YELLOW);
-		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],POINT_COLOR,YELLOW);
+		
 
 		POINT_COLOR=yan_se;
 
