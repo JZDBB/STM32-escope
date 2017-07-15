@@ -23,7 +23,6 @@ static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
 u8 arr_move[10] = " mov_ver\0";
-u8 arr_freq[7] = "000000\0";
 				
 void set_io0(void)					  										
 {

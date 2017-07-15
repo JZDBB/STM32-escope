@@ -24,6 +24,8 @@
 u16 j = 0;
 float temp;
 float temp1;
+u32 frequen = 0;
+u8 arr_freq[8] = "0000000\0";
 
 
 void clear_point(u16 hang)
@@ -221,11 +223,17 @@ void TIM3_IRQHandler()
 {
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
 	//freq=100;
-	frequency=count;
-	count=0;
-	
-	
-	
+	frequen=count;
+	/*arr_freq[0] = frequen/1000000%10+48;
+	arr_freq[1] = frequen/100000%10+48;
+	arr_freq[2] = frequen/10000%10+48;
+	arr_freq[3] = frequen/1000%10+48;
+	arr_freq[4] = frequen/100%10+48;
+	arr_freq[5] = frequen/10%10+48;
+	arr_freq[6] = frequen%10+48;
+	arr_freq[7] = '\0';
+	GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);*/
+	count=0;	
 }
 
 
