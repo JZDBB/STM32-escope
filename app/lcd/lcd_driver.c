@@ -166,7 +166,6 @@ uint16_t i;
 
 
 	/* --R61509V_CPT3.0 --- */
-
 	TFT_WriteCmd(0x0000);
 	TFT_WriteCmd(0x0000);
 	delay_ms(10);

@@ -26,7 +26,6 @@ float temp;
 float temp1;
 
 
-
 void clear_point(u16 hang)
 {
 	u8 index_clear_lie = 0; 
@@ -108,6 +107,8 @@ void rcc_init(void)
 
 void gpio_init(void)
 {
+	
+
 	GPIO_InitTypeDef GPIO_InitTypeStruct;
 
 	GPIO_InitTypeStruct.GPIO_Pin = GPIO_Pin_2;
@@ -160,6 +161,84 @@ void gpio_init(void)
 	GPIO_InitTypeStruct.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_Init(GPIOA, &GPIO_InitTypeStruct);
 }
+
+
+void exti_init2()  //???????
+{
+
+	GPIO_InitTypeDef GPIO_InitStructure;
+	EXTI_InitTypeDef EXTI_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA,&GPIO_InitStructure);
+	 
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource2);
+
+	EXTI_InitStructure.EXTI_Line=EXTI_Line2;
+	EXTI_InitStructure.EXTI_Mode=EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger=EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure); 
+
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);		 
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn; 	//??EXTI2?????
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //??????0
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		  //??????0
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 		  //??
+	NVIC_Init(&NVIC_InitStructure); 		
+}
+
+
+void time_init2()
+{
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;	 //?????????,?????GPIO
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
+	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
+	TIM_TimeBaseInitStructure.TIM_Period = 2000;
+	TIM_TimeBaseInitStructure.TIM_Prescaler = 27999;
+	TIM_TimeBaseInitStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);	
+	TIM_Cmd(TIM3,ENABLE);
+
+	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE );	
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+	NVIC_InitStructure.NVIC_IRQChannel=TIM3_IRQn; 
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority=1;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);	
+}
+
+void TIM3_IRQHandler()
+{
+	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
+	//freq=100;
+	frequency=count;
+	count=0;
+	
+	
+	
+}
+
+
+void EXTI2_IRQHandler()	   //????2????
+{
+
+	if(EXTI_GetITStatus(EXTI_Line2)==SET)
+
+	{
+   		EXTI_ClearITPendingBit(EXTI_Line2);
+		count++;
+	}		
+}
 int main(void)
 {	
 	u8 vpp_buf[7];
@@ -169,7 +248,8 @@ int main(void)
 	vpp_buf[2] = 46;
 	rcc_init();			   //外设时钟配置	
 	delay_init();
-	led_init();				
+	led_init();	
+	delay_ms(1000);
 	TFT_Init();
 	TFT_ClearScreen(BLACK);
 	nvic_init();		   // 中断优先级配置
@@ -182,6 +262,8 @@ int main(void)
 	time_init();			//定时器配置，测频率用的二个定时器
 	time_enable();			//同步开始计数
 	ADC_Get_Value();
+	exti_init2();
+	time_init2();
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{	
@@ -246,7 +328,7 @@ int main(void)
 			v_buf[3] = vol%10000%1000/100+48;
 			v_buf[4] = vol%10000%1000%100/10+48;
 			v_buf[5] = vol%10000%1000%100%10+48;
-			v_buf[7] = '\0';
+			v_buf[6] = '\0';
 			GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
 		}
 		vpp_buf[0]=vpp/10000+0x30;

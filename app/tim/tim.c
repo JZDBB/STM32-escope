@@ -58,7 +58,7 @@ void time1_init(void)
 void time_init(void)
 {
 	time2_init();  
-	time3_init();
+	//time3_init();
 	time1_init();
 }
 void time_enable(void)
