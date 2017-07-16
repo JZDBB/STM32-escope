@@ -8,13 +8,17 @@
 #include "led.h"
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
-u8 num_shao_miao = 1;
+u8 num_shao_miao = 5;
 u8 mode = 0;
-u8 num_fu_du =1;
+u8 num_fu_du =3;
 u8 ad_flag = 1;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
 u16 vpp;
+u16 ver = 0;
+u16 hor = 0;
+float arr_plot[250];
+int flag = 0;
 
 
 static u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
@@ -202,8 +206,8 @@ void set_background(void)
 	GUI_Box(182,205,256,230,YELLOW);
 	GUI_Box(272,205,346,230,YELLOW);
 	LCD_DrawRectangle(2,205,76,230,RED);
-	GUI_Show12ASCII(4,210,arr_V[0],POINT_COLOR,YELLOW);	
-	GUI_Show12ASCII(94,210,arr_F[0],POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(4,210,arr_V[2],POINT_COLOR,YELLOW);	
+	GUI_Show12ASCII(94,210,arr_F[4],POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(184,210,arr_move[0],POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(274,210,"load data",POINT_COLOR,YELLOW);
 }
@@ -247,13 +251,12 @@ void EXTI0_IRQHandler(void)
 		if(mode == 5)mode = 0;
 		if(mode == 0)
 		{
-			//GUI_Show12ASCII(260,224,"f",POINT_COLOR,WHITE);
 			LCD_DrawRectangle(2,205,76,230,RED);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
 			LCD_DrawRectangle(272,205,346,230,YELLOW);
 		}
-		else if(mode == 1)//GUI_Show12ASCII(260,224,"v",POINT_COLOR,WHITE);
+		else if(mode == 1)
 		{
 			LCD_DrawRectangle(2,205,76,230,YELLOW);
 			LCD_DrawRectangle(92,205,166,230,RED);
@@ -266,7 +269,11 @@ void EXTI0_IRQHandler(void)
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
 			LCD_DrawRectangle(182,205,256,230,RED);
 			LCD_DrawRectangle(272,205,346,230,YELLOW);
+			DMA_Cmd(DMA1_Channel1,DISABLE);
 			TIM_Cmd(TIM1,DISABLE);
+			flag = 1;
+			ver = 0;
+			pause_plot(ver, hor);
 			
 		}
 		else if(mode ==3)
@@ -276,7 +283,10 @@ void EXTI0_IRQHandler(void)
 			LCD_DrawRectangle(182,205,256,230,RED);
 			LCD_DrawRectangle(272,205,346,230,YELLOW);
 			GUI_Show12ASCII(184,210,arr_move[1],BLUE,YELLOW);
+			DMA_Cmd(DMA1_Channel1,DISABLE);
 			TIM_Cmd(TIM1,DISABLE);
+			flag = 1;
+			hor = 0;
 		}
 		else if(mode ==4)
 		{
@@ -285,7 +295,11 @@ void EXTI0_IRQHandler(void)
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
 			LCD_DrawRectangle(272,205,346,230,RED);
 			GUI_Show12ASCII(184,210,arr_move[0],BLUE,YELLOW);
+			DMA_Cmd(DMA1_Channel1,ENABLE);
 			TIM_Cmd(TIM1,ENABLE);
+			flag = 0;
+			ver = 0;
+			hor = 0;
 		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line0);
@@ -307,13 +321,18 @@ void EXTI3_IRQHandler(void)
 		{	
 			num_shao_miao++;
 			if(num_shao_miao == 14)num_shao_miao = 1;
-			
 		}
 		else if(mode==2)
 		{
-			
+			hor = hor+5;
+			ADC_print(ver,hor);
 		}
 		else if(mode==3)
+		{
+			ver = ver+5;
+			ADC_print(ver,hor);
+		}
+		else if(mode==4)
 		{
 			
 		}

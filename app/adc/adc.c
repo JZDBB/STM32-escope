@@ -13,8 +13,6 @@ u16 a[640];
 u16 index = 0;
 u16 index1 = 0;
 
-
-
 void DMA1_Init(void)
 {
 	DMA_InitTypeDef  DMA_InitTypeStruct;
@@ -125,12 +123,24 @@ u16 ADC_Get_Vpp(void)
 }
 
 
-void ADC_print(u16 ver, u16 hor,MoveStatus State, u8 delta)
+void clear()
+{
+	int i;
+	for(i = 0;i<WIDE;i++)
+	{
+		lcd_huadian(i,arr_plot[i],BLACK);				
+		lcd_huaxian(i,arr_plot[i],i+1,arr_plot[i+1],BLACK);
+	}
+}
+
+void ADC_print(u16 ver, u16 hor)
 {
 	int x;
+	int i = 0;
 	float value = 0;
 	float value1 = 0;
-	switch (State)
+	clear();
+	/*switch (State)
 	{
 		case 0:
 			for(x = 200+hor;x<hor+200+WIDE;x++)
@@ -180,11 +190,11 @@ void ADC_print(u16 ver, u16 hor,MoveStatus State, u8 delta)
 				lcd_huadian(x-index,value1,BLACK);				
 				lcd_huaxian(x-index,value1,x-index+1,value,BLACK);
 			}
-	}
+	}*/
 	POINT_COLOR = YELLOW;
 	for(x=200+hor;x<hor+200+WIDE;x++)
 		{
-      value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
 			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
 				if(value1>200)
 				{
@@ -202,8 +212,10 @@ void ADC_print(u16 ver, u16 hor,MoveStatus State, u8 delta)
 				{
 					value=0;	
 				}
-				lcd_huadian(x-index,value1,POINT_COLOR);				
-				lcd_huaxian(x-index,value1,x-index+1,value,POINT_COLOR);
+				lcd_huadian(i,value1,POINT_COLOR);				
+				lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+				arr_plot[i] = value1;
+				i++;
 			}
 	/*for(x = 0;x<WIDE;x++)
 	{
@@ -213,4 +225,48 @@ void ADC_print(u16 ver, u16 hor,MoveStatus State, u8 delta)
 		}
 	}*/
 	hua_wang();				
+}
+
+
+void pause_plot(u16 ver, u16 hor)
+{
+	int x;
+	int i = 0;
+	float value = 0;
+	float value1 = 0;
+	clear();
+	POINT_COLOR = YELLOW;
+	for(x=200+hor;x<hor+200+WIDE;x++)
+		{
+			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+				if(value1>200)
+				{
+					value1=200;	
+				}
+				if(value1<0)
+				{
+					value1=0;	
+				}
+				if(value>200)
+				{
+					value=200;	
+				}
+				if(value<0)
+				{
+					value=0;	
+				}
+				lcd_huadian(i,value1,POINT_COLOR);				
+				lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+				arr_plot[i] = value1;
+				i++;
+			}
+	/*for(x = 0;x<WIDE;x++)
+	{
+		for(y = 0;y<HIGH;y++)
+		{
+			value = a[200+x]
+		}
+	}*/
+	hua_wang();
 }

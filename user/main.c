@@ -104,8 +104,6 @@ void rcc_init(void)
 
 void gpio_init(void)
 {
-	
-
 	GPIO_InitTypeDef GPIO_InitTypeStruct;
 
 	GPIO_InitTypeStruct.GPIO_Pin = GPIO_Pin_2;
@@ -258,7 +256,6 @@ int main(void)
 	set_io0();
 	key_init();
 	ADC1_Init();	//adc配置
-	
 	 
 	time_init();			//定时器配置，测频率用的二个定时器
 	time_enable();			//同步开始计数
@@ -270,83 +267,86 @@ int main(void)
 	set_background();	 	 //初始化背景
 	vpp = ADC_Get_Vpp();
 	while(1)
-	{	
-	
-		for(j=index;j<index+250;j++)
+	{
+		if(flag == 0)
 		{
-      temp = a[j] * 3300 / 4096  *  25 /vcc_div;
-			temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
-//			if(interval == 0)
-//			{
-				clear_point(j-index);
-				if(temp>200)
-				{
-					temp=200;	
-				}
-				if(temp<0)
-				{
-					temp=0;	
-				}
-				if(temp1>200)
-				{
-					temp1=200;	
-				}
-				if(temp1<0)
-				{
-					temp1=0;	
-				}
-				lcd_huadian(j-index,temp,POINT_COLOR);				
-				lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
-				hua_wang();	
-/*			}
-			else
+			int i = 0;
+			for(j=index;j<index+250;j++)
 			{
-				for(i = 0;i<interval;i++)
+				temp = a[j] * 3300 / 4096  *  25 /vcc_div;
+				temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
+	//			if(interval == 0)
+	//			{
+					clear_point(j-index);
+					if(temp>200)
+					{
+						temp=200;	
+					}
+					if(temp<0)
+					{
+						temp=0;	
+					}
+					if(temp1>200)
+					{
+						temp1=200;	
+					}
+					if(temp1<0)
+					{
+						temp1=0;	
+					}
+					lcd_huadian(j-index,temp,POINT_COLOR);				
+					lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
+					hua_wang();	
+					arr_plot[i] = temp;
+					i++;
+	/*			}
+				else
 				{
-					clear_point(j-index+interval);
-				}
-				//clear_point(j-index);
-				if(temp>200)
-				{
-					temp=200;	
-				}
-				if(temp<0)
-				{ss
-					temp=0;	
-				}
-				if(temp1>200)
-				{
-					temp1=200;	
-				}
-				if(temp1<0)
-				{
-					temp1=0;	
-				}
-				lcd_huadian(j-index,temp,POINT_COLOR);				
-				lcd_huaxian(j-index,temp,j-index+interval,temp1,POINT_COLOR);
-				hua_wang();
-				j = j+interval;
-			}*/
-			vol = a[j + 1] * 3300 / 4095;
-			v_buf[0] = vol/10000+48;
-			v_buf[1] = vol%10000/1000+48;
-			v_buf[3] = vol%10000%1000/100+48;
-			v_buf[4] = vol%10000%1000%100/10+48;
-			v_buf[5] = vol%10000%1000%100%10+48;
-			v_buf[6] = '\0';
-			GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
-			//GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
-		}
+					for(i = 0;i<interval;i++)
+					{
+						clear_point(j-index+interval);
+					}
+					//clear_point(j-index);
+					if(temp>200)
+					{
+						temp=200;	
+					}
+					if(temp<0)
+					{ss
+						temp=0;	
+					}
+					if(temp1>200)
+					{
+						temp1=200;	
+					}
+					if(temp1<0)
+					{
+						temp1=0;	
+					}
+					lcd_huadian(j-index,temp,POINT_COLOR);				
+					lcd_huaxian(j-index,temp,j-index+interval,temp1,POINT_COLOR);
+					hua_wang();
+					j = j+interval;
+				}*/
+				vol = a[j + 1] * 3300 / 4095;
+				v_buf[0] = vol/10000+48;
+				v_buf[1] = vol%10000/1000+48;
+				v_buf[3] = vol%10000%1000/100+48;
+				v_buf[4] = vol%10000%1000%100/10+48;
+				v_buf[5] = vol%10000%1000%100%10+48;
+				v_buf[6] = '\0';
+				GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
+			}
 		vpp_buf[0]=vpp/10000+0x30;
 		vpp_buf[1]=vpp%10000/1000+0x30;		
 		vpp_buf[3]=vpp%10000%1000/100+0x30;
 		vpp_buf[4]=vpp%10000%1000%100/10+0x30;
 		vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 		vpp_buf[6]='\0';
-		GUI_Show12ASCII(262,62,vpp_buf,POINT_COLOR,BLACK);	
-		
+		GUI_Show12ASCII(262,62,vpp_buf,POINT_COLOR,BLACK);
 		GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
 		ADC_Get_Value();
 		vpp = ADC_Get_Vpp();
+		}
 	}
 }
