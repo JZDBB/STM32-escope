@@ -273,7 +273,9 @@ void EXTI0_IRQHandler(void)
 			TIM_Cmd(TIM1,DISABLE);
 			flag = 1;
 			ver = 0;
-			pause_plot(ver, hor);
+			hor = 0;
+			//pause_plot(ver, hor);
+			ADC_print(ver, hor, 1);
 			
 		}
 		else if(mode ==3)
@@ -286,7 +288,10 @@ void EXTI0_IRQHandler(void)
 			DMA_Cmd(DMA1_Channel1,DISABLE);
 			TIM_Cmd(TIM1,DISABLE);
 			flag = 1;
+			//pause_plot(ver, hor);
+			ADC_print(ver, hor, 1);
 			hor = 0;
+			ver = 0;
 		}
 		else if(mode ==4)
 		{
@@ -324,13 +329,13 @@ void EXTI3_IRQHandler(void)
 		}
 		else if(mode==2)
 		{
-			hor = hor+5;
-			ADC_print(ver,hor);
+			hor = hor+10;
+			ADC_print(ver,hor,1);
 		}
 		else if(mode==3)
 		{
-			ver = ver+5;
-			ADC_print(ver,hor);
+			ver = ver+10;
+			ADC_print(ver,hor,1);
 		}
 		else if(mode==4)
 		{
@@ -360,11 +365,13 @@ void EXTI4_IRQHandler(void)
 		}
 		else if(mode==2)
 		{
-			
+			hor = hor+10;
+			ADC_print(ver,hor,0);
 		}
 		else if(mode==3)
 		{
-			
+			ver = ver+10;
+			ADC_print(ver,hor,0);
 		}
 		else if(mode==4)
 		{

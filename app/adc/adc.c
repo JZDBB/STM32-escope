@@ -7,7 +7,7 @@
 #define ADC1_DR_Address    ((u32)0x4001244C)
 #define WIDE (250)
 #define HIGH (200)
-typedef enum {VERTICAL = 0, HORIZONTAL = 1} MoveStatus;
+typedef enum {DEC = 0, PLUS = 1} MoveStatus;
 
 u16 a[640];
 u16 index = 0;
@@ -133,69 +133,21 @@ void clear()
 	}
 }
 
-void ADC_print(u16 ver, u16 hor)
+void ADC_print(u16 ver, u16 hor,MoveStatus State)
 {
 	int x;
 	int i = 0;
 	float value = 0;
 	float value1 = 0;
 	clear();
-	/*switch (State)
+	POINT_COLOR = YELLOW;
+	switch (State)
 	{
 		case 0:
-			for(x = 200+hor;x<hor+200+WIDE;x++)
+			for(x=200-hor;x<200-hor+WIDE;x++)
 			{
-				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver + delta;
-				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver + delta;
-				if(value1>200)
-				{
-					value1=200;	
-				}
-				if(value1<0)
-				{
-					value1=0;	
-				}
-				if(value>200)
-				{
-					value=200;	
-				}
-				if(value<0)
-				{
-					value=0;	
-				}
-				lcd_huadian(x-index,value1,BLACK);				
-				lcd_huaxian(x-index,value1,x-index+1,value,BLACK);
-			}
-		case 1:
-			for(x = 200+hor+delta;x<hor+200+WIDE+delta;x++)
-			{
-				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
-				if(value1>200)
-				{
-					value1=200;	
-				}
-				if(value1<0)
-				{
-					value1=0;	
-				}
-				if(value>200)
-				{
-					value=200;	
-				}
-				if(value<0)
-				{
-					value=0;	
-				}
-				lcd_huadian(x-index,value1,BLACK);				
-				lcd_huaxian(x-index,value1,x-index+1,value,BLACK);
-			}
-	}*/
-	POINT_COLOR = YELLOW;
-	for(x=200+hor;x<hor+200+WIDE;x++)
-		{
-			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+				value1 = a[x] * 3300 / 4096  *  25 /vcc_div - ver;
+				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div - ver;
 				if(value1>200)
 				{
 					value1=200;	
@@ -217,13 +169,34 @@ void ADC_print(u16 ver, u16 hor)
 				arr_plot[i] = value1;
 				i++;
 			}
-	/*for(x = 0;x<WIDE;x++)
-	{
-		for(y = 0;y<HIGH;y++)
-		{
-			value = a[200+x]
-		}
-	}*/
+			break;
+		case 1:	
+			for(x=200+hor;x<hor+200+WIDE;x++)
+			{
+				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+					if(value1>200)
+					{
+						value1=200;	
+					}
+					if(value1<0)
+					{
+						value1=0;	
+					}
+					if(value>200)
+					{
+						value=200;	
+					}
+					if(value<0)
+					{
+						value=0;	
+					}
+					lcd_huadian(i,value1,POINT_COLOR);				
+					lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+					arr_plot[i] = value1;
+					i++;
+				}
+	}
 	hua_wang();				
 }
 
