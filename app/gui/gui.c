@@ -455,6 +455,8 @@ void GUI_Show12Char(uint16_t x, uint16_t y, uint8_t *ch,
         }
     }    
 }
+
+
 /****************************************************************************
 * Function Name  : GUI_Show12Chinese
 * Description    : 通过FLASH字库显示12号汉字（使用GBK）

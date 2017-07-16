@@ -2,8 +2,12 @@
 #include "math.h"
 #include "tim.h"
 #include "stm32f10x_it.h"
+#include "lcd_driver.h"
 
 #define ADC1_DR_Address    ((u32)0x4001244C)
+#define WIDE (250)
+#define HIGH (200)
+typedef enum {VERTICAL = 0, HORIZONTAL = 1} MoveStatus;
 
 u16 a[640];
 u16 index = 0;
@@ -56,7 +60,6 @@ void ADC1_Init(void)									 //adc初始化
 	DMA1_Init();
 	AD_Init();
 	ADC_DMACmd(ADC1, ENABLE);    //ADC DMA使能
-
 	ADC_Cmd(ADC1, ENABLE);		 //ADC使能
 	ADC_ResetCalibration(ADC1);	 //ADC校准复位
 	while(ADC_GetResetCalibrationStatus(ADC1));
@@ -66,7 +69,7 @@ void ADC1_Init(void)									 //adc初始化
 
 void ADC_Get_Value(void)								 //得到数据，
 {
-	float gao_pin_period = 0;
+	//float gao_pin_period = 0;
 	DMA1_Init();	                  
 	TIM_SetCounter(TIM1,0);	   //清空寄存器
 	if(num_shao_miao>3)
@@ -119,4 +122,95 @@ u16 ADC_Get_Vpp(void)
 	pp = (float)(max_data-min_data);
 	pp = pp*(3300.0/4095);
 	return pp;	
+}
+
+
+void ADC_print(u16 ver, u16 hor,MoveStatus State, u8 delta)
+{
+	int x;
+	float value = 0;
+	float value1 = 0;
+	switch (State)
+	{
+		case 0:
+			for(x = 200+hor;x<hor+200+WIDE;x++)
+			{
+				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver + delta;
+				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver + delta;
+				if(value1>200)
+				{
+					value1=200;	
+				}
+				if(value1<0)
+				{
+					value1=0;	
+				}
+				if(value>200)
+				{
+					value=200;	
+				}
+				if(value<0)
+				{
+					value=0;	
+				}
+				lcd_huadian(x-index,value1,BLACK);				
+				lcd_huaxian(x-index,value1,x-index+1,value,BLACK);
+			}
+		case 1:
+			for(x = 200+hor+delta;x<hor+200+WIDE+delta;x++)
+			{
+				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+				if(value1>200)
+				{
+					value1=200;	
+				}
+				if(value1<0)
+				{
+					value1=0;	
+				}
+				if(value>200)
+				{
+					value=200;	
+				}
+				if(value<0)
+				{
+					value=0;	
+				}
+				lcd_huadian(x-index,value1,BLACK);				
+				lcd_huaxian(x-index,value1,x-index+1,value,BLACK);
+			}
+	}
+	POINT_COLOR = YELLOW;
+	for(x=200+hor;x<hor+200+WIDE;x++)
+		{
+      value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+				if(value1>200)
+				{
+					value1=200;	
+				}
+				if(value1<0)
+				{
+					value1=0;	
+				}
+				if(value>200)
+				{
+					value=200;	
+				}
+				if(value<0)
+				{
+					value=0;	
+				}
+				lcd_huadian(x-index,value1,POINT_COLOR);				
+				lcd_huaxian(x-index,value1,x-index+1,value,POINT_COLOR);
+			}
+	/*for(x = 0;x<WIDE;x++)
+	{
+		for(y = 0;y<HIGH;y++)
+		{
+			value = a[200+x]
+		}
+	}*/
+	hua_wang();				
 }

@@ -17,16 +17,11 @@
 #include "adc.h"
 
 
-#define WIDE (250)
-#define HIGH (210)
-
-
 u16 j = 0;
 float temp;
 float temp1;
 u32 frequen = 0;
 u8 arr_freq[8] = "0000000\0";
-
 
 void clear_point(u16 hang)
 {
@@ -165,7 +160,7 @@ void gpio_init(void)
 }
 
 
-void exti_init2()  //???????
+void exti_init2() 
 {
 
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -173,14 +168,14 @@ void exti_init2()  //???????
 	NVIC_InitTypeDef NVIC_InitStructure;
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE);
 
 	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_2;
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA,&GPIO_InitStructure);
+	GPIO_Init(GPIOE,&GPIO_InitStructure);
 	 
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource2);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource2);
 
 	EXTI_InitStructure.EXTI_Line=EXTI_Line2;
 	EXTI_InitStructure.EXTI_Mode=EXTI_Mode_Interrupt;
@@ -224,20 +219,20 @@ void TIM3_IRQHandler()
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);
 	//freq=100;
 	frequen=count;
-	/*arr_freq[0] = frequen/1000000%10+48;
-	arr_freq[1] = frequen/100000%10+48;
-	arr_freq[2] = frequen/10000%10+48;
-	arr_freq[3] = frequen/1000%10+48;
-	arr_freq[4] = frequen/100%10+48;
-	arr_freq[5] = frequen/10%10+48;
-	arr_freq[6] = frequen%10+48;
-	arr_freq[7] = '\0';
-	GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);*/
+	arr_freq[0] = frequen/1000000%10+48;
+		arr_freq[1] = frequen/100000%10+48;
+		arr_freq[2] = frequen/10000%10+48;
+		arr_freq[3] = frequen/1000%10+48;
+		arr_freq[4] = frequen/100%10+48;
+		arr_freq[5] = frequen/10%10+48;
+		arr_freq[6] = frequen%10+48;
+		arr_freq[7] = '\0';
+	
 	count=0;	
 }
 
 
-void EXTI2_IRQHandler()	   //????2????
+void EXTI2_IRQHandler()	
 {
 
 	if(EXTI_GetITStatus(EXTI_Line2)==SET)
@@ -257,24 +252,26 @@ int main(void)
 	rcc_init();			   //外设时钟配置	
 	delay_init();
 	led_init();	
-	delay_ms(1000);
-	TFT_Init();
-	TFT_ClearScreen(BLACK);
+	
 	nvic_init();		   // 中断优先级配置
 	gpio_init();		   	//外设io口配置
 	set_io0();
 	key_init();
 	ADC1_Init();	//adc配置
-	set_background();	 	 //初始化背景
+	
 	 
 	time_init();			//定时器配置，测频率用的二个定时器
 	time_enable();			//同步开始计数
 	ADC_Get_Value();
 	exti_init2();
 	time_init2();
+	TFT_Init();
+	TFT_ClearScreen(BLACK);
+	set_background();	 	 //初始化背景
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{	
+	
 		for(j=index;j<index+250;j++)
 		{
       temp = a[j] * 3300 / 4096  *  25 /vcc_div;
@@ -314,7 +311,7 @@ int main(void)
 					temp=200;	
 				}
 				if(temp<0)
-				{
+				{ss
 					temp=0;	
 				}
 				if(temp1>200)
@@ -338,6 +335,7 @@ int main(void)
 			v_buf[5] = vol%10000%1000%100%10+48;
 			v_buf[6] = '\0';
 			GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
+			//GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
 		}
 		vpp_buf[0]=vpp/10000+0x30;
 		vpp_buf[1]=vpp%10000/1000+0x30;		
@@ -346,6 +344,8 @@ int main(void)
 		vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 		vpp_buf[6]='\0';
 		GUI_Show12ASCII(262,62,vpp_buf,POINT_COLOR,BLACK);	
+		
+		GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
 		ADC_Get_Value();
 		vpp = ADC_Get_Vpp();
 	}

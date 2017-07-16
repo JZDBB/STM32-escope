@@ -34,3 +34,4 @@
 ..\obj\adc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\obj\adc.o: ..\app\tim\tim.h
 ..\obj\adc.o: ..\user\stm32f10x_it.h
+..\obj\adc.o: ..\app\lcd\lcd_driver.h

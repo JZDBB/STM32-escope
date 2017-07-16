@@ -22,7 +22,7 @@ static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0
 
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
-u8 arr_move[10] = " mov_ver\0";
+u8 arr_move[2][10] ={ " mov_ver\0"," mov_hor\0"};
 				
 void set_io0(void)					  										
 {
@@ -141,8 +141,6 @@ void set_io11(void)
 	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
 }
 
-
-
 void lcd_huadian(u16 a,u16 b,u16 color)
 {							    
 	GUI_Dot(a,200-b,color);
@@ -179,7 +177,6 @@ void hua_wang(void)
 	GUI_Line(125,0,125,200,POINT_COLOR);
 	POINT_COLOR=RED;
 }
-
 void set_background(void)
 {
 	POINT_COLOR = BLUE;
@@ -207,7 +204,7 @@ void set_background(void)
 	LCD_DrawRectangle(2,205,76,230,RED);
 	GUI_Show12ASCII(4,210,arr_V[0],POINT_COLOR,YELLOW);	
 	GUI_Show12ASCII(94,210,arr_F[0],POINT_COLOR,YELLOW);
-	GUI_Show12ASCII(184,210,arr_move,POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(184,210,arr_move[0],POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(274,210,"load data",POINT_COLOR,YELLOW);
 }
 
@@ -247,7 +244,7 @@ void EXTI0_IRQHandler(void)
 	{
 		mode++;
 		led0=0;
-		if(mode == 4)mode = 0;
+		if(mode == 5)mode = 0;
 		if(mode == 0)
 		{
 			//GUI_Show12ASCII(260,224,"f",POINT_COLOR,WHITE);
@@ -269,16 +266,28 @@ void EXTI0_IRQHandler(void)
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
 			LCD_DrawRectangle(182,205,256,230,RED);
 			LCD_DrawRectangle(272,205,346,230,YELLOW);
+			TIM_Cmd(TIM1,DISABLE);
+			
 		}
 		else if(mode ==3)
 		{
 			LCD_DrawRectangle(2,205,76,230,YELLOW);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
+			LCD_DrawRectangle(182,205,256,230,RED);
+			LCD_DrawRectangle(272,205,346,230,YELLOW);
+			GUI_Show12ASCII(184,210,arr_move[1],BLUE,YELLOW);
+			TIM_Cmd(TIM1,DISABLE);
+		}
+		else if(mode ==4)
+		{
+			LCD_DrawRectangle(2,205,76,230,YELLOW);
+			LCD_DrawRectangle(92,205,166,230,YELLOW);
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
 			LCD_DrawRectangle(272,205,346,230,RED);
+			GUI_Show12ASCII(184,210,arr_move[0],BLUE,YELLOW);
+			TIM_Cmd(TIM1,ENABLE);
 		}
 	}
-	
 	EXTI_ClearITPendingBit(EXTI_Line0);
 	POINT_COLOR = yan_se1;
 }	   
@@ -329,13 +338,16 @@ void EXTI4_IRQHandler(void)
 		{	
 			num_shao_miao--;
 			if(num_shao_miao == 0)num_shao_miao = 13;
-			
 		}
 		else if(mode==2)
 		{
 			
 		}
 		else if(mode==3)
+		{
+			
+		}
+		else if(mode==4)
 		{
 			
 		}
@@ -352,21 +364,12 @@ void TIM2_IRQHandler(void)
 	u16 yan_se;
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update))
 	{
-		TIM_Cmd(TIM3,DISABLE);
 		TIM_Cmd(TIM2,DISABLE);
 
    	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-		temple = TIM_GetCounter(TIM3);
 		frequency = 65536*count+ temple;
 		frequency = frequency - frequency*(130.10/1000000);
-		/*arr_freq[0] = frequency/100000+48;
-		arr_freq[1] = frequency%100000/10000+48;
-		arr_freq[2] = frequency%100000%10000/1000+48;
-		arr_freq[3] = frequency%100000%10000%1000/100+48;
-		arr_freq[4] = frequency%100000%10000%1000%100/10+48;
-		arr_freq[5] = frequency%100000%10000%1000%100%10+48;
-		GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);*/
-
+		
 		switch(num_shao_miao)
 		{
 			/*case 1:shao_miao_shu_du = 347;gao_pin_palus = 1;break;
@@ -420,12 +423,12 @@ void TIM2_IRQHandler(void)
 			case 10:vcc_div=200;set_io10();break;
 			case 11:vcc_div=100;set_io11();break;*/
 			
-			case 1:vcc_div=100;set_io11();break;
-			case 2:vcc_div=200;set_io10();break;
-			case 3:vcc_div=500;set_io7();break;
-			case 4:vcc_div=1000;set_io1();break;
-			case 5:vcc_div=2000;set_io1();break;
-			case 6:vcc_div=5000;set_io1();break;
+			case 1:vcc_div=100;break;
+			case 2:vcc_div=200;break;
+			case 3:vcc_div=500;break;
+			case 4:vcc_div=1000;break;
+			case 5:vcc_div=2000;break;
+			case 6:vcc_div=5000;break;
 			default :break;
 		}
 
@@ -504,18 +507,10 @@ void TIM2_IRQHandler(void)
 		{
 			frequency_flag = 0;			
 		}
-		
-		
 
 		POINT_COLOR=yan_se;
-
-		count = 0;
 		TIM_SetCounter(TIM2,0);
-		TIM_SetCounter(TIM3,0);
-
 		TIM_Cmd(TIM2,ENABLE);
-    TIM_Cmd(TIM3,ENABLE);
-		led0=!led0;	  
 	}
 }
 
