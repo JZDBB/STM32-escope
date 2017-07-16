@@ -28,18 +28,18 @@ Project File Date:  07/12/2017
 Rebuild target 'Target 1'
 compiling main.c...
 compiling stm32f10x_it.c...
-stm32f10x_it.c(278): warning:  #223-D: function "ADC_print" declared implicitly
-                        ADC_print(ver, hor, 1);
-stm32f10x_it.c(292): warning:  #223-D: function "ADC_print" declared implicitly
-                        ADC_print(ver, hor, 1);
+stm32f10x_it.c(276): warning:  #223-D: function "ADC_print" declared implicitly
+                        ADC_print(ver, hor);            
+stm32f10x_it.c(289): warning:  #223-D: function "ADC_print" declared implicitly
+                        ADC_print(ver, hor);
+stm32f10x_it.c(328): warning:  #223-D: function "ADC_print" declared implicitly
+                        ADC_print(ver,hor);
 stm32f10x_it.c(333): warning:  #223-D: function "ADC_print" declared implicitly
-                        ADC_print(ver,hor,1);
-stm32f10x_it.c(338): warning:  #223-D: function "ADC_print" declared implicitly
-                        ADC_print(ver,hor,1);
+                        ADC_print(ver,hor);
+stm32f10x_it.c(364): warning:  #223-D: function "ADC_print" declared implicitly
+                        ADC_print(ver,hor);
 stm32f10x_it.c(369): warning:  #223-D: function "ADC_print" declared implicitly
-                        ADC_print(ver,hor,0);
-stm32f10x_it.c(374): warning:  #223-D: function "ADC_print" declared implicitly
-                        ADC_print(ver,hor,0);
+                        ADC_print(ver,hor);
 stm32f10x_it.c: 6 warnings, 0 errors
 compiling system_stm32f10x.c...
 compiling delay.c...
@@ -73,7 +73,7 @@ compiling button.c...
 compiling tim.c...
 compiling adc.c...
 linking...
-Program Size: Code=22932 RO-data=2712 RW-data=352 ZI-data=4112  
+Program Size: Code=22628 RO-data=2712 RW-data=356 ZI-data=4116  
 FromELF: creating hex file...
 "..\obj\Template.axf" - 0 Error(s), 6 Warning(s).
 

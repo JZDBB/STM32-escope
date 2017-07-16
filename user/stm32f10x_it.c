@@ -15,8 +15,8 @@ u8 ad_flag = 1;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
 u16 vpp;
-u16 ver = 0;
-u16 hor = 0;
+int ver = 0;
+int hor = 0;
 float arr_plot[250];
 int flag = 0;
 
@@ -272,11 +272,8 @@ void EXTI0_IRQHandler(void)
 			DMA_Cmd(DMA1_Channel1,DISABLE);
 			TIM_Cmd(TIM1,DISABLE);
 			flag = 1;
-			ver = 0;
-			hor = 0;
 			//pause_plot(ver, hor);
-			ADC_print(ver, hor, 1);
-			
+			ADC_print(ver, hor);		
 		}
 		else if(mode ==3)
 		{
@@ -289,9 +286,7 @@ void EXTI0_IRQHandler(void)
 			TIM_Cmd(TIM1,DISABLE);
 			flag = 1;
 			//pause_plot(ver, hor);
-			ADC_print(ver, hor, 1);
-			hor = 0;
-			ver = 0;
+			ADC_print(ver, hor);
 		}
 		else if(mode ==4)
 		{
@@ -330,12 +325,12 @@ void EXTI3_IRQHandler(void)
 		else if(mode==2)
 		{
 			hor = hor+10;
-			ADC_print(ver,hor,1);
+			ADC_print(ver,hor);
 		}
 		else if(mode==3)
 		{
 			ver = ver+10;
-			ADC_print(ver,hor,1);
+			ADC_print(ver,hor);
 		}
 		else if(mode==4)
 		{
@@ -365,13 +360,13 @@ void EXTI4_IRQHandler(void)
 		}
 		else if(mode==2)
 		{
-			hor = hor+10;
-			ADC_print(ver,hor,0);
+			hor = hor-10;
+			ADC_print(ver,hor);
 		}
 		else if(mode==3)
 		{
-			ver = ver+10;
-			ADC_print(ver,hor,0);
+			ver = ver-10;
+			ADC_print(ver,hor);
 		}
 		else if(mode==4)
 		{

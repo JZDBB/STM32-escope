@@ -133,7 +133,7 @@ void clear()
 	}
 }
 
-void ADC_print(u16 ver, u16 hor,MoveStatus State)
+void ADC_print(int ver, int hor)//,MoveStatus State)
 {
 	int x;
 	int i = 0;
@@ -141,7 +141,7 @@ void ADC_print(u16 ver, u16 hor,MoveStatus State)
 	float value1 = 0;
 	clear();
 	POINT_COLOR = YELLOW;
-	switch (State)
+	/*switch (State)
 	{
 		case 0:
 			for(x=200-hor;x<200-hor+WIDE;x++)
@@ -196,10 +196,35 @@ void ADC_print(u16 ver, u16 hor,MoveStatus State)
 					arr_plot[i] = value1;
 					i++;
 				}
-	}
+	}*/
+	
+	for(x=200+hor;x<hor+200+WIDE;x++)
+		{
+			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+			if(value1>200)
+			{
+				value1=200;	
+			}
+			if(value1<0)
+			{
+				value1=0;	
+			}
+			if(value>200)
+			{
+				value=200;	
+			}
+			if(value<0)
+			{
+				value=0;	
+			}
+			lcd_huadian(i,value1,POINT_COLOR);				
+			lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+			arr_plot[i] = value1;
+			i++;
+		}
 	hua_wang();				
 }
-
 
 void pause_plot(u16 ver, u16 hor)
 {

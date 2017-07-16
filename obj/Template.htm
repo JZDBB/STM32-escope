@@ -3,9 +3,9 @@
 <title>Static Call Graph - [..\obj\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\obj\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sun Jul 16 17:07:22 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sun Jul 16 17:18:36 2017
 <BR><P>
-<H3>Maximum Stack Usage =        220 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        212 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 EXTI0_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 <P>
@@ -489,8 +489,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[13]"></a>EXTI0_IRQHandler</STRONG> (Thumb, 640 bytes, Stack size 16 bytes, stm32f10x_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 220<LI>Call Chain = EXTI0_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
+<P><STRONG><a name="[13]"></a>EXTI0_IRQHandler</STRONG> (Thumb, 616 bytes, Stack size 16 bytes, stm32f10x_it.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = EXTI0_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawRectangle
@@ -504,7 +504,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_hd.o(RESET)
 </UL>
 <P><STRONG><a name="[16]"></a>EXTI3_IRQHandler</STRONG> (Thumb, 314 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = EXTI3_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
+<BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = EXTI3_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
@@ -514,8 +514,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_hd.o(RESET)
 </UL>
-<P><STRONG><a name="[17]"></a>EXTI4_IRQHandler</STRONG> (Thumb, 230 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 212<LI>Call Chain = EXTI4_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
+<P><STRONG><a name="[17]"></a>EXTI4_IRQHandler</STRONG> (Thumb, 226 bytes, Stack size 8 bytes, stm32f10x_it.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = EXTI4_IRQHandler &rArr; ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
@@ -1875,8 +1875,8 @@ Global Symbols
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pause_plot
 </UL>
 
-<P><STRONG><a name="[a3]"></a>ADC_print</STRONG> (Thumb, 600 bytes, Stack size 48 bytes, adc.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
+<P><STRONG><a name="[a3]"></a>ADC_print</STRONG> (Thumb, 280 bytes, Stack size 40 bytes, adc.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 196<LI>Call Chain = ADC_print &rArr; clear &rArr; lcd_huaxian &rArr; GUI_Line &rArr; GUI_Dot &rArr; TFT_SetWindow
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_huaxian
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_huadian
@@ -1892,7 +1892,7 @@ Global Symbols
 <LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI0_IRQHandler
 </UL>
 
-<P><STRONG><a name="[f4]"></a>pause_plot</STRONG> (Thumb, 280 bytes, Stack size 40 bytes, adc.o(.text), UNUSED)
+<P><STRONG><a name="[f4]"></a>pause_plot</STRONG> (Thumb, 336 bytes, Stack size 40 bytes, adc.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_huaxian
 <LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_huadian
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hua_wang
