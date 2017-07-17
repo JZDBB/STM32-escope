@@ -15,6 +15,7 @@
 #include "tim.h"
 #include "stm32f10x_it.h"
 #include "adc.h"
+#include "usart.h"
 
 
 u16 j = 0;
@@ -265,6 +266,8 @@ int main(void)
 	TFT_Init();
 	TFT_ClearScreen(BLACK);
 	set_background();	 	 //≥ı ºªØ±≥æ∞
+	USART3_Init(9600);
+	
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{

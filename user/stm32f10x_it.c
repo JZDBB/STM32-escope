@@ -26,7 +26,7 @@ static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0
 
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
-u8 arr_move[2][10] ={ " mov_ver\0"," mov_hor\0"};
+u8 arr_move[2][10] ={" mov_hor\0"," mov_ver\0"};
 				
 void set_io0(void)					  										
 {
@@ -238,6 +238,17 @@ void key_init(void)
 	EXTI_Init(&EXTI_InitTypeStruct);
 }
 
+void load_data()
+{
+	int i;
+	float value = 0;
+	for(i = 0;i<640;i++)
+	{
+		value = a[i] * 3300 / 4096;
+		printf("%d,%f\n",i, value);
+	}
+}
+
 void EXTI0_IRQHandler(void)
 {
 	u16 yan_se1;
@@ -295,8 +306,8 @@ void EXTI0_IRQHandler(void)
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
 			LCD_DrawRectangle(272,205,346,230,RED);
 			GUI_Show12ASCII(184,210,arr_move[0],BLUE,YELLOW);
-			DMA_Cmd(DMA1_Channel1,ENABLE);
-			TIM_Cmd(TIM1,ENABLE);
+			DMA_Cmd(DMA1_Channel1,DISABLE);
+			TIM_Cmd(TIM1,DISABLE);
 			flag = 0;
 			ver = 0;
 			hor = 0;
@@ -334,7 +345,7 @@ void EXTI3_IRQHandler(void)
 		}
 		else if(mode==4)
 		{
-			
+			load_data();
 		}
 		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
 		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
