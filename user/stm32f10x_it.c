@@ -6,6 +6,8 @@
 #include "adc.h"
 #include "button.h"
 #include "led.h"
+//#include "usart.h"
+
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
 u8 num_shao_miao = 5;
@@ -27,123 +29,6 @@ static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
 u8 arr_move[2][10] ={" mov_hor\0"," mov_ver\0"};
-				
-void set_io0(void)					  										
-{
-	GPIO_ResetBits(GPIOA,GPIO_Pin_3);	
-	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_6);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_7);
-}
-
-void set_io1(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_6);     
-}
-
-void set_io2(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     
-}
-
-void set_io3(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
-	GPIO_SetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_ResetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io4(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_ResetBits(GPIOA,GPIO_Pin_4);
-	GPIO_SetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io5(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io6(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_SetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_ResetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io7(void)					  										
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_SetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io8(void)					  										
-{
-	GPIO_ResetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io9(void)					  										
-{
-	GPIO_ResetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_SetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_ResetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io10(void)					  										
-{
-	GPIO_ResetBits(GPIOA,GPIO_Pin_3);
-	GPIO_SetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_SetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
-
-void set_io11(void)					  										
-{
-	GPIO_ResetBits(GPIOA,GPIO_Pin_3);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_7);	
-
-	GPIO_SetBits(GPIOA,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);			   //  GPIO_SetBits
-	GPIO_SetBits(GPIOA,GPIO_Pin_6);     	   //GPIO_ResetBits
-}
 
 void lcd_huadian(u16 a,u16 b,u16 color)
 {							    
@@ -241,11 +126,12 @@ void key_init(void)
 void load_data()
 {
 	int i;
-	float value = 0;
 	for(i = 0;i<640;i++)
 	{
-		value = a[i] * 3300 / 4096;
-		printf("%d,%f\n",i, value);
+		USART_SendData(USART3, (u8)(a[i]>>8));
+		while(USART_GetFlagStatus(USART3,USART_FLAG_TXE)==RESET);
+		USART_SendData(USART3, (u8)(a[i]<<8>>8));
+		while(USART_GetFlagStatus(USART3,USART_FLAG_TXE)==RESET);
 	}
 }
 
