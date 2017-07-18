@@ -6,14 +6,15 @@
 #include "adc.h"
 #include "button.h"
 #include "led.h"
-//#include "usart.h"
+
+#define WIDE (250)
+#define HIGH (200)
 
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
 u8 num_shao_miao = 5;
 u8 mode = 0;
 u8 num_fu_du =3;
-u8 ad_flag = 1;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
 u16 vpp;
@@ -21,6 +22,7 @@ int ver = 0;
 int hor = 0;
 float arr_plot[250];
 int flag = 0;
+int inter = 0;
 
 
 static u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
@@ -278,15 +280,15 @@ void EXTI4_IRQHandler(void)
 
 void TIM2_IRQHandler(void)
 {
-	u16 temple;
-	u16 yan_se;
+	//u16 temple;
+	//u16 yan_se;
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update))
 	{
 		TIM_Cmd(TIM2,DISABLE);
 
    	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-		frequency = 65536*count+ temple;
-		frequency = frequency - frequency*(130.10/1000000);
+		//frequency = 65536*count+ temple;
+		//frequency = frequency - frequency*(130.10/1000000);
 		
 		switch(num_shao_miao)
 		{
@@ -312,19 +314,19 @@ void TIM2_IRQHandler(void)
 			case 19:shao_miao_shu_du = 200000;break;
 			case 20:shao_miao_shu_du = 500000;break;
 			case 21:shao_miao_shu_du = 1000000;break;*/
-			case 1:shao_miao_shu_du = 5000;//gao_pin_palus = 20;break;//shao_miao_shu_du = 5;break;
-			case 2:shao_miao_shu_du = 10000;//gao_pin_palus = 50;break;//shao_miao_shu_du = 10;break;	
-			case 3:shao_miao_shu_du = 20000;//gao_pin_palus = 50;break;//shao_miao_shu_du = 20;break;	
-			case 4:shao_miao_shu_du = 50;break;		  //分界点
-			case 5:shao_miao_shu_du = 100;break;
-			case 6:shao_miao_shu_du = 200;break;
-			case 7:shao_miao_shu_du = 500;break;
-			case 8:shao_miao_shu_du = 1000;break;
-			case 9:shao_miao_shu_du = 2000;break;
-			case 10:shao_miao_shu_du = 5000;break;
-			case 11:shao_miao_shu_du = 10000;break;
-			case 12:shao_miao_shu_du = 20000;break;
-			case 13:shao_miao_shu_du = 50000;break;
+			case 1:shao_miao_shu_du = 5;inter = 5;break;
+			case 2:shao_miao_shu_du = 10;inter = 3;break;	
+			case 3:shao_miao_shu_du = 20;inter = 2;break;
+			case 4:shao_miao_shu_du = 50;inter = 0;break;		  //分界点
+			case 5:shao_miao_shu_du = 100;inter = 0;break;
+			case 6:shao_miao_shu_du = 200;inter = 0;break;
+			case 7:shao_miao_shu_du = 500;inter = 0;break;
+			case 8:shao_miao_shu_du = 1000;inter = 0;break;
+			case 9:shao_miao_shu_du = 2000;inter = 0;break;
+			case 10:shao_miao_shu_du = 5000;inter = 0;break;
+			case 11:shao_miao_shu_du = 10000;inter = 0;break;
+			case 12:shao_miao_shu_du = 20000;inter = 0;break;
+			case 13:shao_miao_shu_du = 50000;inter = 0;break;
 			default :break;
 		}
 		switch(num_fu_du)
@@ -415,7 +417,7 @@ void TIM2_IRQHandler(void)
 		vcc_div_buf[7]='\0';*/
 		
 		
-		yan_se = POINT_COLOR;
+		/*yan_se = POINT_COLOR;
 		POINT_COLOR=BLUE;
 		if(frequency>20000)
 		{
@@ -426,7 +428,9 @@ void TIM2_IRQHandler(void)
 			frequency_flag = 0;			
 		}
 
-		POINT_COLOR=yan_se;
+		POINT_COLOR=yan_se;*/
+		
+		
 		TIM_SetCounter(TIM2,0);
 		TIM_Cmd(TIM2,ENABLE);
 	}

@@ -15,16 +15,14 @@
 #include "tim.h"
 #include "stm32f10x_it.h"
 #include "adc.h"
-//#include "usart.h"
-
 
 u16 j = 0;
 float temp;
 float temp1;
 u32 frequen = 0;
 u8 arr_freq[8] = "0000000\0";
-u16 USART_RX_STA=0;       //接收状态标记	
-u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
+//u16 USART_RX_STA=0;       //接收状态标记	
+//u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
 
 void clear_point(u16 hang)
 {
@@ -220,7 +218,7 @@ void USART3_Init(u32 bound)
    //GPIO端口设置
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
+	//NVIC_InitTypeDef NVIC_InitStructure;
 	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);
@@ -255,7 +253,7 @@ void USART3_Init(u32 bound)
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=2;//抢占优先级2
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		//子优先级2
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器、	*/
+	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器  */
 }
 void TIM3_IRQHandler()
 {
@@ -285,34 +283,6 @@ void EXTI2_IRQHandler()
 		count++;
 	}		
 }
-/*void USART3_IRQHandler(void)                	//串口3中断服务程序
-{
-	u8 r;
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)  //接收中断
-	{
-		r =USART_ReceiveData(USART3);//(USART3->DR);	//读取接收到的数据
-		if((USART_RX_STA&0x8000)==0)//接收未完成
-		{
-			if(USART_RX_STA&0x4000)//接收到了0x0d
-			{
-				if(r!=0x0a)USART_RX_STA=0;//接收错误,重新开始
-				else USART_RX_STA|=0x8000;	//接收完成了 
-			}
-			else //还没收到0X0D
-			{	
-				if(r==0x0d)USART_RX_STA|=0x4000;
-				else
-				{
-					USART_RX_BUF[USART_RX_STA&0X3FFF]=r ;
-					USART_RX_STA++;
-					if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
-				}		 
-			}
-		}   		
-	} 
-	
-} */
-
 int main(void)
 {	
 	u8 vpp_buf[7];
@@ -342,16 +312,16 @@ int main(void)
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{
+		POINT_COLOR = YELLOW;
 		if(flag == 0)
 		{
 			int i = 0;
-			for(j=index;j<index+250;j++)
+			if(inter == 0)
 			{
-				temp = a[j] * 3300 / 4096  *  25 /vcc_div;
-				temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
-	//			if(interval == 0)
-	//			{
-					clear_point(j-index);
+				for(j=index2;j<index2+250;j++)
+				{
+					temp = a[j] * 3300 / 4096  *  25 /vcc_div;
+					temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
 					if(temp>200)
 					{
 						temp=200;	
@@ -368,59 +338,62 @@ int main(void)
 					{
 						temp1=0;	
 					}
-					lcd_huadian(j-index,temp,POINT_COLOR);				
-					lcd_huaxian(j-index,temp,j-index+1,temp1,POINT_COLOR);
-					hua_wang();	
+					clear_point(j-index2);
+					lcd_huadian(j-index2,temp,POINT_COLOR);				
+					lcd_huaxian(j-index2,temp,j-index2+1,temp1,POINT_COLOR);
+					hua_wang();
 					arr_plot[i] = temp;
 					i++;
-	/*			}
+					flag_50us = 0;
+					vol = a[j + 1] * 3300 / 4095;
+					v_buf[0] = vol/10000+48;
+					v_buf[1] = vol%10000/1000+48;
+					v_buf[3] = vol%10000%1000/100+48;
+					v_buf[4] = vol%10000%1000%100/10+48;
+					v_buf[5] = vol%10000%1000%100%10+48;
+					v_buf[6] = '\0';
+					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
+				}
+			}
+			else
+			{
+				if(flag_50us==0)
+				{
+					clear();
+					flag_50us = 1;
+				}
 				else
 				{
-					for(i = 0;i<interval;i++)
-					{
-						clear_point(j-index+interval);
-					}
-					//clear_point(j-index);
-					if(temp>200)
-					{
-						temp=200;	
-					}
-					if(temp<0)
-					{ss
-						temp=0;	
-					}
-					if(temp1>200)
-					{
-						temp1=200;	
-					}
-					if(temp1<0)
-					{
-						temp1=0;	
-					}
-					lcd_huadian(j-index,temp,POINT_COLOR);				
-					lcd_huaxian(j-index,temp,j-index+interval,temp1,POINT_COLOR);
-					hua_wang();
-					j = j+interval;
-				}*/
-				vol = a[j + 1] * 3300 / 4095;
-				v_buf[0] = vol/10000+48;
-				v_buf[1] = vol%10000/1000+48;
-				v_buf[3] = vol%10000%1000/100+48;
-				v_buf[4] = vol%10000%1000%100/10+48;
-				v_buf[5] = vol%10000%1000%100%10+48;
-				v_buf[6] = '\0';
-				GUI_Show12ASCII(262,22,v_buf,POINT_COLOR,BLACK);
+					clear_inter(inter);
+				}
+				for(j=index2;j<index2+250/inter;j++)
+				{
+					lcd_huadian((j-index2)*inter,temp,POINT_COLOR);				
+					//lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,POINT_COLOR);
+					arr_plot[j-index2] = temp;
+					vol = a[j + 1] * 3300 / 4095;
+					v_buf[0] = vol/10000+48;
+					v_buf[1] = vol%10000/1000+48;
+					v_buf[3] = vol%10000%1000/100+48;
+					v_buf[4] = vol%10000%1000%100/10+48;
+					v_buf[5] = vol%10000%1000%100%10+48;
+					v_buf[6] = '\0';
+					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
+				}
+				hua_wang();
+				delay_ms(500);
 			}
+		}
 		vpp_buf[0]=vpp/10000+0x30;
 		vpp_buf[1]=vpp%10000/1000+0x30;		
 		vpp_buf[3]=vpp%10000%1000/100+0x30;
 		vpp_buf[4]=vpp%10000%1000%100/10+0x30;
 		vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 		vpp_buf[6]='\0';
-		GUI_Show12ASCII(262,62,vpp_buf,POINT_COLOR,BLACK);
+		GUI_Show12ASCII(262,62,vpp_buf,RED,BLACK);
 		GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
 		ADC_Get_Value();
 		vpp = ADC_Get_Vpp();
-		}
 	}
 }
+

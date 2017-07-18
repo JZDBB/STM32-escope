@@ -10,8 +10,10 @@
 typedef enum {DEC = 0, PLUS = 1} MoveStatus;
 
 u16 a[640];
-u16 index = 0;
+u16 index2 = 0;
 u16 index1 = 0;
+u8 flag_change = 0;
+u8 flag_50us = 0;
 
 void DMA1_Init(void)
 {
@@ -85,7 +87,7 @@ void ADC_Get_Value(void)								 //得到数据，
 		
 		TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
 		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
-		TIM_SetAutoreload(TIM1, shao_miao_shu_du/25-1); //设定扫描速度
+		TIM_SetAutoreload(TIM1, 1); //设定扫描速度
 	}
 	
 	TIM_Cmd(TIM1,ENABLE);
@@ -114,7 +116,7 @@ u16 ADC_Get_Vpp(void)
 		if(a[n]<min_data)
 		{
 			min_data = a[n];
-			index = n;
+			index2 = n;
 		}			
 	} 	
 	pp = (float)(max_data-min_data);
@@ -123,7 +125,7 @@ u16 ADC_Get_Vpp(void)
 }
 
 
-void clear()
+void clear(void)
 {
 	int i;
 	for(i = 0;i<WIDE;i++)
@@ -139,42 +141,17 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 	int i = 0;
 	float value = 0;
 	float value1 = 0;
-	clear();
-	POINT_COLOR = YELLOW;
-	/*switch (State)
+	if(flag_50us ==0)
 	{
-		case 0:
-			for(x=200-hor;x<200-hor+WIDE;x++)
-			{
-				value1 = a[x] * 3300 / 4096  *  25 /vcc_div - ver;
-				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div - ver;
-				if(value1>200)
+		clear();
+		POINT_COLOR = YELLOW;
+		/*switch (State)
+		{
+			case 0:
+				for(x=200-hor;x<200-hor+WIDE;x++)
 				{
-					value1=200;	
-				}
-				if(value1<0)
-				{
-					value1=0;	
-				}
-				if(value>200)
-				{
-					value=200;	
-				}
-				if(value<0)
-				{
-					value=0;	
-				}
-				lcd_huadian(i,value1,POINT_COLOR);				
-				lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
-				arr_plot[i] = value1;
-				i++;
-			}
-			break;
-		case 1:	
-			for(x=200+hor;x<hor+200+WIDE;x++)
-			{
-				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+					value1 = a[x] * 3300 / 4096  *  25 /vcc_div - ver;
+					value = a[x + 1] * 3300 / 4096 * 25 / vcc_div - ver;
 					if(value1>200)
 					{
 						value1=200;	
@@ -196,34 +173,87 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 					arr_plot[i] = value1;
 					i++;
 				}
-	}*/
-	
-	for(x=200+hor;x<hor+200+WIDE;x++)
+				break;
+			case 1:	
+				for(x=200+hor;x<hor+200+WIDE;x++)
+				{
+					value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+					value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+						if(value1>200)
+						{
+							value1=200;	
+						}
+						if(value1<0)
+						{
+							value1=0;	
+						}
+						if(value>200)
+						{
+							value=200;	
+						}
+						if(value<0)
+						{
+							value=0;	
+						}
+						lcd_huadian(i,value1,POINT_COLOR);				
+						lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+						arr_plot[i] = value1;
+						i++;
+					}
+		}*/
+		
+		for(x=200+hor;x<hor+200+WIDE;x++)
+			{
+				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+				if(value1>HIGH)
+				{
+					value1=HIGH;	
+				}
+				if(value1<0)
+				{
+					value1=0;	
+				}
+				if(value>HIGH)
+				{
+					value=HIGH;	
+				}
+				if(value<0)
+				{
+					value=0;	
+				}
+				lcd_huadian(i,value1,POINT_COLOR);				
+				lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+				arr_plot[i] = value1;
+				i++;
+			}
+		hua_wang();				
+	}
+	else
+	{
+		
+		clear_inter(inter);
+		for(x=200+hor;x<hor+200+WIDE;x++)
 		{
 			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
 			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
-			if(value1>200)
-			{
-				value1=200;	
-			}
-			if(value1<0)
-			{
-				value1=0;	
-			}
-			if(value>200)
-			{
-				value=200;	
-			}
-			if(value<0)
-			{
-				value=0;	
-			}
-			lcd_huadian(i,value1,POINT_COLOR);				
-			lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
-			arr_plot[i] = value1;
-			i++;
+			lcd_huadian(i,value,YELLOW);				
+			//lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,POINT_COLOR);
+			arr_plot[i] = value;
+			i = i+inter;
 		}
-	hua_wang();				
+		hua_wang();
+	}
+}
+
+void clear_inter(int inter)
+{
+	int i;
+	for(i = 0;i<WIDE;i = i+inter)
+	{
+		lcd_huadian(i,arr_plot[i],BLACK);
+		//lcd_huaxian(i,arr_plot[i],i+inter,arr_plot[i+1],BLACK);
+	}
 }
 
 void pause_plot(u16 ver, u16 hor)
@@ -235,30 +265,30 @@ void pause_plot(u16 ver, u16 hor)
 	clear();
 	POINT_COLOR = YELLOW;
 	for(x=200+hor;x<hor+200+WIDE;x++)
+	{
+		value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
+		value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+		if(value1>HIGH)
 		{
-			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
-				if(value1>200)
-				{
-					value1=200;	
-				}
-				if(value1<0)
-				{
-					value1=0;	
-				}
-				if(value>200)
-				{
-					value=200;	
-				}
-				if(value<0)
-				{
-					value=0;	
-				}
-				lcd_huadian(i,value1,POINT_COLOR);				
-				lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
-				arr_plot[i] = value1;
-				i++;
-			}
+			value1=HIGH;	
+		}
+		if(value1<0)
+		{
+			value1=0;	
+		}
+		if(value>HIGH)
+		{
+			value=HIGH;	
+		}
+		if(value<0)
+		{
+			value=0;	
+		}
+		lcd_huadian(i,value1,POINT_COLOR);				
+		lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+		arr_plot[i] = value1;
+		i++;
+	}
 	/*for(x = 0;x<WIDE;x++)
 	{
 		for(y = 0;y<HIGH;y++)
