@@ -364,13 +364,32 @@ int main(void)
 				}
 				else
 				{
-					clear_inter(inter);
+					clear_inter(inter_b);
 				}
 				for(j=index2;j<index2+250/inter;j++)
 				{
-					lcd_huadian((j-index2)*inter,temp,POINT_COLOR);				
-					//lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,POINT_COLOR);
+					temp = a[j] * 3300 / 4096  *  25 /vcc_div;
+					temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
+					if(temp>200)
+					{
+						temp=200;	
+					}
+					if(temp<0)
+					{
+						temp=0;	
+					}
+					if(temp1>200)
+					{
+						temp1=200;	
+					}
+					if(temp1<0)
+					{
+						temp1=0;	
+					}
+					lcd_huadian((j-index2)*inter,temp,YELLOW);
+					lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,YELLOW);
 					arr_plot[j-index2] = temp;
+					inter_b = inter;
 					vol = a[j + 1] * 3300 / 4095;
 					v_buf[0] = vol/10000+48;
 					v_buf[1] = vol%10000/1000+48;
@@ -383,17 +402,17 @@ int main(void)
 				hua_wang();
 				delay_ms(500);
 			}
+			vpp_buf[0]=vpp/10000+0x30;
+			vpp_buf[1]=vpp%10000/1000+0x30;		
+			vpp_buf[3]=vpp%10000%1000/100+0x30;
+			vpp_buf[4]=vpp%10000%1000%100/10+0x30;
+			vpp_buf[5]=vpp%10000%1000%100%10+0x30;
+			vpp_buf[6]='\0';
+			GUI_Show12ASCII(262,62,vpp_buf,RED,BLACK);
+			GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
+			ADC_Get_Value();
+			vpp = ADC_Get_Vpp();
 		}
-		vpp_buf[0]=vpp/10000+0x30;
-		vpp_buf[1]=vpp%10000/1000+0x30;		
-		vpp_buf[3]=vpp%10000%1000/100+0x30;
-		vpp_buf[4]=vpp%10000%1000%100/10+0x30;
-		vpp_buf[5]=vpp%10000%1000%100%10+0x30;
-		vpp_buf[6]='\0';
-		GUI_Show12ASCII(262,62,vpp_buf,RED,BLACK);
-		GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
-		ADC_Get_Value();
-		vpp = ADC_Get_Vpp();
 	}
 }
 

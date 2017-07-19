@@ -314,19 +314,19 @@ void TIM2_IRQHandler(void)
 			case 19:shao_miao_shu_du = 200000;break;
 			case 20:shao_miao_shu_du = 500000;break;
 			case 21:shao_miao_shu_du = 1000000;break;*/
-			case 1:shao_miao_shu_du = 5;inter = 5;break;
-			case 2:shao_miao_shu_du = 10;inter = 3;break;	
-			case 3:shao_miao_shu_du = 20;inter = 2;break;
-			case 4:shao_miao_shu_du = 50;inter = 0;break;		  //分界点
-			case 5:shao_miao_shu_du = 100;inter = 0;break;
-			case 6:shao_miao_shu_du = 200;inter = 0;break;
-			case 7:shao_miao_shu_du = 500;inter = 0;break;
-			case 8:shao_miao_shu_du = 1000;inter = 0;break;
-			case 9:shao_miao_shu_du = 2000;inter = 0;break;
-			case 10:shao_miao_shu_du = 5000;inter = 0;break;
-			case 11:shao_miao_shu_du = 10000;inter = 0;break;
-			case 12:shao_miao_shu_du = 20000;inter = 0;break;
-			case 13:shao_miao_shu_du = 50000;inter = 0;break;
+			case 1:shao_miao_shu_du = 5;inter = 5;flag_50us=1;break;
+			case 2:shao_miao_shu_du = 10;inter = 3;flag_50us=1;break;	
+			case 3:shao_miao_shu_du = 20;inter = 2;flag_50us=1;break;
+			case 4:shao_miao_shu_du = 50;inter = 0;flag_50us=0;break;		  //分界点
+			case 5:shao_miao_shu_du = 100;inter = 0;flag_50us=0;break;
+			case 6:shao_miao_shu_du = 200;inter = 0;flag_50us=0;break;
+			case 7:shao_miao_shu_du = 500;inter = 0;flag_50us=0;break;
+			case 8:shao_miao_shu_du = 1000;inter = 0;flag_50us=0;break;
+			case 9:shao_miao_shu_du = 2000;inter = 0;flag_50us=0;break;
+			case 10:shao_miao_shu_du = 5000;inter = 0;flag_50us=0;break;
+			case 11:shao_miao_shu_du = 10000;inter = 0;flag_50us=0;break;
+			case 12:shao_miao_shu_du = 20000;inter = 0;flag_50us=0;break;
+			case 13:shao_miao_shu_du = 50000;inter = 0;flag_50us=0;break;
 			default :break;
 		}
 		switch(num_fu_du)

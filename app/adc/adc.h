@@ -9,6 +9,7 @@ extern u16 index2;
 extern u16 index1;
 extern u8 flag_change;
 extern u8 flag_50us;
+extern int inter_b;
 
 void ADC1_Init(void);
 void ADC_Get_Value(void);

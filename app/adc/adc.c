@@ -14,6 +14,7 @@ u16 index2 = 0;
 u16 index1 = 0;
 u8 flag_change = 0;
 u8 flag_50us = 0;
+int inter_b = 0;
 
 void DMA1_Init(void)
 {
@@ -222,8 +223,8 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 				{
 					value=0;	
 				}
-				lcd_huadian(i,value1,POINT_COLOR);				
-				lcd_huaxian(i,value1,i+1,value,POINT_COLOR);
+				lcd_huadian(i,value1,YELLOW);				
+				lcd_huaxian(i,value1,i+1,value,YELLOW);
 				arr_plot[i] = value1;
 				i++;
 			}
@@ -231,15 +232,32 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 	}
 	else
 	{
-		
-		clear_inter(inter);
-		for(x=200+hor;x<hor+200+WIDE;x++)
+		i = 0;
+		clear_inter(inter_b);
+		for(x=200+hor;x<hor+200+WIDE/inter;x++)
 		{
 			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
 			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
-			lcd_huadian(i,value,YELLOW);				
-			//lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,POINT_COLOR);
-			arr_plot[i] = value;
+			if(value1>HIGH)
+			{
+				value1=HIGH;	
+			}
+			if(value1<0)
+			{
+				value1=0;	
+			}
+			if(value>HIGH)
+			{
+				value=HIGH;	
+			}
+			if(value<0)
+			{
+				value=0;	
+			}
+			lcd_huadian(i,value,YELLOW);
+			lcd_huaxian(i,value1,i+inter,value,YELLOW);
+			arr_plot[x] = value;
+			inter_b = inter;
 			i = i+inter;
 		}
 		hua_wang();
@@ -249,10 +267,10 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 void clear_inter(int inter)
 {
 	int i;
-	for(i = 0;i<WIDE;i = i+inter)
+	for(i = 0;i<250/inter;i++)
 	{
-		lcd_huadian(i,arr_plot[i],BLACK);
-		//lcd_huaxian(i,arr_plot[i],i+inter,arr_plot[i+1],BLACK);
+		lcd_huadian(i*inter,arr_plot[i],BLACK);
+		lcd_huaxian(i*inter,arr_plot[i],(i+1)*inter,arr_plot[i+1],BLACK);
 	}
 }
 
