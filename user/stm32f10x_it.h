@@ -23,10 +23,14 @@ extern u16 interval;
 extern int flag;
 extern float arr_plot[250];
 extern int inter;
+extern int gain;
+extern u8 C_dc_ac;
+extern u8 change_gain;
 	 
 extern u8 arr_F[13][11];
 extern u8 arr_V[6][11];
-
+extern u8 arr_gain[8][6];
+extern u8 arr_JDQ[2][3];
 //extern u8 arr_move[2][10];
 
 

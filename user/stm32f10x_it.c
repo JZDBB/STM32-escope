@@ -24,14 +24,67 @@ float arr_plot[250];
 int flag = 0;
 int inter = 0;
 int flag_mode = 0;
+int gain = 1;
+u8 C_dc_ac = 0;
+u8 change_gain = 1;
 
 u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
 u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
-
-//u8 arr_V[10] = "100mV/div";
+u8 arr_gain[8][6] = {"0 0 0\0","0 0 1\0","0 1 0\0","0 1 1\0","1 0 0\0","1 0 1\0","1 1 0\0","1 1 1\0"};
+u8 arr_C[2][10] = {" AC\0", " DC\0"};
 //u8 arr_f[10] = "  5us/div";
 u8 arr_move[2][10] ={" mov_hor\0"," mov_ver\0"};
+u8 arr_JDQ[2][3] = {" 0\0"," 1\0"};
+float gain_num[8] = {0.05, 0.1, 0.2, 0.4, 8, 10, 20, 25};
 
+void set_io1(void)					  										
+{
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io2(void)					  										
+{
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io3(void)					  										
+{
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io4(void)					  										
+{
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io5(void)					  										
+{
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io6(void)					  										
+{
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io7(void)					  										
+{
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io8(void)					  										
+{
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+}
 void lcd_huadian(u16 a,u16 b,u16 color)
 {							    
 	GUI_Dot(a,200-b,color);
@@ -78,13 +131,27 @@ void set_background(void)
 	GUI_Line(125,0,125,200,POINT_COLOR);
 
 	POINT_COLOR=RED;
-	LCD_DrawRectangle(252,0,398,200,RED);
-	GUI_Show12ASCII(272,5,"V(V):",POINT_COLOR,BLACK);
-	//GUI_Show12ASCII(272,210,"Vmax:",POINT_COLOR,YELLOW);
-	//GUI_Show12ASCII(272,210,"Vmin:",POINT_COLOR,YELLOW);
-	GUI_Show12ASCII(272,45,"Vpp(V):",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(272,95,"Freq(Hz):",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(272,145,"duty(%):",POINT_COLOR,BLACK);
+	LCD_DrawRectangle(252,0,346,200,RED);
+	GUI_Show12ASCII(262,5,"V(V):",POINT_COLOR,BLACK);
+	//GUI_Show12ASCII(262,210,"Vmax:",POINT_COLOR,YELLOW);
+	//GUI_Show12ASCII(262,210,"Vmin:",POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(262,45,"Vpp(V):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(262,95,"Freq(Hz):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(262,145,"duty(%):",POINT_COLOR,BLACK);
+	
+	POINT_COLOR=BLUE;
+	LCD_DrawRectangle(348,0,399,200,WHITE);
+	LCD_DrawRectangle(351,2,396,20,POINT_COLOR);
+	LCD_DrawRectangle(351,30,396,66,POINT_COLOR);
+	LCD_DrawRectangle(351,76,396,112,POINT_COLOR);
+	GUI_Show12ASCII(354,4,arr_C[0],POINT_COLOR,BLACK);
+	//GUI_Show12ASCII(262,210,"Vmax:",POINT_COLOR,YELLOW);
+	//GUI_Show12ASCII(262,210,"Vmin:",POINT_COLOR,YELLOW);
+	GUI_Show12ASCII(354,32," SJ ",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(354,78,"C B A",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(354,94,arr_gain[gain-1],BLUE,BLACK);
+	GUI_Show12ASCII(354,48,arr_JDQ[change_gain],BLUE,BLACK);
+	GUI_Show12ASCII(354,4,arr_C[C_dc_ac],BLUE,BLACK);
 
 	POINT_COLOR=BLUE;
 	LCD_DrawRectangle(0,202,398,236,GREEN);
@@ -147,9 +214,10 @@ void EXTI0_IRQHandler(void)
 	{
 		mode++;
 		led0=0;
-		if(mode == 5)mode = 0;
+		if(mode == 8)mode = 0;
 		if(mode == 0)
 		{
+			LCD_DrawRectangle(351,76,396,112,BLUE);
 			LCD_DrawRectangle(2,205,76,230,RED);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
@@ -200,6 +268,25 @@ void EXTI0_IRQHandler(void)
 			ver = 0;
 			hor = 0;
 		}
+		else if(mode ==5)
+		{
+			LCD_DrawRectangle(272,205,346,230,YELLOW);
+			LCD_DrawRectangle(351,2,396,20,WHITE);
+			LCD_DrawRectangle(351,30,396,66,BLUE);
+			LCD_DrawRectangle(351,76,396,112,BLUE);
+		}
+		else if(mode ==6)
+		{
+			LCD_DrawRectangle(351,2,396,20,BLUE);
+			LCD_DrawRectangle(351,30,396,66,WHITE);
+			LCD_DrawRectangle(351,76,396,112,BLUE);
+		}
+		else if(mode ==7)
+		{
+			LCD_DrawRectangle(351,2,396,20,BLUE);
+			LCD_DrawRectangle(351,30,396,66,BLUE);
+			LCD_DrawRectangle(351,76,396,112,WHITE);
+		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line0);
 	POINT_COLOR = yan_se1;
@@ -235,8 +322,38 @@ void EXTI3_IRQHandler(void)
 		{
 			load_data();
 		}
+		else if(mode ==5)
+		{
+			if(C_dc_ac ==0)
+			{
+				C_dc_ac =1;
+			}
+			else
+			{
+				C_dc_ac =0;
+			}
+		}
+		else if(mode==6)
+		{
+			if(change_gain ==0)
+			{
+				change_gain =1;
+			}
+			else
+			{
+				change_gain =0;
+			}
+		}
+		else if(mode ==7)
+		{
+			gain++;
+			if(gain==9)gain = 1;
+		}
 		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
 		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
+		GUI_Show12ASCII(354,94,arr_gain[gain-1],BLUE,BLACK);
+		GUI_Show12ASCII(354,48,arr_JDQ[change_gain],BLUE,BLACK);
+		GUI_Show12ASCII(354,4,arr_C[C_dc_ac],BLUE,BLACK);
 	}
 	EXTI_ClearITPendingBit(EXTI_Line3);
 }
@@ -271,8 +388,22 @@ void EXTI4_IRQHandler(void)
 		{
 			
 		}
+		else if(mode ==5)
+		{
+			
+		}
+		else if(mode==6)
+		{
+			
+		}
+		else if(mode ==7)
+		{
+			gain--;
+			if(gain==0)gain = 8;
+		}
 		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
 		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
+		GUI_Show12ASCII(354,94,arr_gain[gain-1],BLUE,BLACK);
 	}
 	EXTI_ClearITPendingBit(EXTI_Line4);
 }
@@ -428,6 +559,40 @@ void TIM2_IRQHandler(void)
 		}
 
 		POINT_COLOR=yan_se;*/
+		
+		switch(gain)
+		{	
+			case 1:set_io1();break;
+			case 2:set_io2();break;
+			case 3:set_io3();break;
+			case 4:set_io4();break;
+			case 5:set_io5();break;
+			case 6:set_io6();break;
+			case 7:set_io7();break;
+			case 8:set_io8();break;
+			default :break;
+		}
+		
+		switch(C_dc_ac)
+		{
+			case 0:GPIO_ResetBits(GPIOC,GPIO_Pin_7);break;
+			case 1:GPIO_SetBits(GPIOC,GPIO_Pin_7);break;
+			default: break;
+		}
+		
+		switch(change_gain)
+		{
+			case 0:
+				GPIO_ResetBits(GPIOC,GPIO_Pin_6);
+				multiple = 0.5*gain_num[gain-1];
+			break;
+			case 1:
+				GPIO_SetBits(GPIOC,GPIO_Pin_6);
+				multiple = 0.05*gain_num[gain-1];
+			break;
+			default: break;
+		}
+		
 		
 		
 		TIM_SetCounter(TIM2,0);

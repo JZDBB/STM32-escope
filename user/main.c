@@ -310,13 +310,12 @@ void EXTI1_IRQHandler()
 }
 void EXTI2_IRQHandler()	
 {
-
-	if(EXTI_GetITStatus(EXTI_Line2)==SET)
-
+	delay_ms(10);
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)==0)
 	{
-   	EXTI_ClearITPendingBit(EXTI_Line12);
-		multiple = 1;
+   	multiple = 1;
 	}		
+	EXTI_ClearITPendingBit(EXTI_Line12);
 }
 
 int main(void)
@@ -360,7 +359,7 @@ int main(void)
 					temp1 = a[j + 1] * 3300* multiple / 4096 * 25 / vcc_div;
 					if(temp>200)
 					{
-						temp=200;	
+						temp=200;
 					}
 					if(temp<0)
 					{
@@ -388,7 +387,7 @@ int main(void)
 					v_buf[4] = vol%10000%1000%100/10+48;
 					v_buf[5] = vol%10000%1000%100%10+48;
 					v_buf[6] = '\0';
-					GUI_Show12ASCII(272,22,v_buf,RED,BLACK);
+					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
 				}
 			}
 			else
@@ -433,7 +432,7 @@ int main(void)
 					v_buf[4] = vol%10000%1000%100/10+48;
 					v_buf[5] = vol%10000%1000%100%10+48;
 					v_buf[6] = '\0';
-					GUI_Show12ASCII(272,22,v_buf,RED,BLACK);
+					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
 				}
 				hua_wang();
 				delay_ms(500);
@@ -444,8 +443,8 @@ int main(void)
 			vpp_buf[4]=vpp%10000%1000%100/10+0x30;
 			vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 			vpp_buf[6]='\0';
-			GUI_Show12ASCII(272,62,vpp_buf,RED,BLACK);
-			GUI_Show12ASCII(272,112,arr_freq,RED,BLACK);
+			GUI_Show12ASCII(262,62,vpp_buf,RED,BLACK);
+			GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
 			ADC_Get_Value();
 			vpp = ADC_Get_Vpp();
 		}

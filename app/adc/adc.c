@@ -15,7 +15,8 @@ u16 index1 = 0;
 u8 flag_change = 0;
 u8 flag_50us = 0;
 int inter_b = 0;
-u8 multiple = 1;
+float multiple = 1;
+int mode_hard = 0;
 
 void DMA1_Init(void)
 {

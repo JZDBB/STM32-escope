@@ -10,7 +10,8 @@ extern u16 index1;
 extern u8 flag_change;
 extern u8 flag_50us;
 extern int inter_b;
-extern u8 multiple;
+extern float multiple;
+extern int mode_hard; 
 
 void ADC1_Init(void);
 void ADC_Get_Value(void);
