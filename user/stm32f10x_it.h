@@ -23,6 +23,12 @@ extern u16 interval;
 extern int flag;
 extern float arr_plot[250];
 extern int inter;
+	 
+extern u8 arr_F[13][11];
+extern u8 arr_V[6][11];
+
+//extern u8 arr_move[2][10];
+
 
 void lcd_huadian(u16 a,u16 b,u16 color);
 void lcd_huaxian(u16 x1,u16 y1,u16 x2,u16 y2,u16 color);

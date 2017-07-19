@@ -86,7 +86,7 @@ void ADC_Get_Value(void)								 //得到数据，
 		//TIM_SetCompare1(TIM1, gao_pin_period);
 		//TIM_SetAutoreload(TIM1,gao_pin_period);	
 		
-		TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
+		TIM_PrescalerConfig(TIM1,1,TIM_PSCReloadMode_Immediate);
 		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
 		TIM_SetAutoreload(TIM1, 1); //设定扫描速度
 	}
@@ -234,7 +234,7 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 	{
 		i = 0;
 		clear_inter(inter_b);
-		for(x=200+hor;x<hor+200+WIDE/inter;x++)
+		for(x=200+hor;x<hor+200+WIDE/inter-1;x++)
 		{
 			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
 			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
@@ -254,11 +254,11 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 			{
 				value=0;	
 			}
-			lcd_huadian(i,value,YELLOW);
-			lcd_huaxian(i,value1,i+inter,value,YELLOW);
-			arr_plot[x] = value;
+			lcd_huadian(i*inter,value1,YELLOW);
+			lcd_huaxian(i*inter,value1,(i+1)*inter,value,YELLOW);
+			arr_plot[i] = value1;
 			inter_b = inter;
-			i = i+inter;
+			i++;
 		}
 		hua_wang();
 	}
@@ -267,7 +267,7 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 void clear_inter(int inter)
 {
 	int i;
-	for(i = 0;i<250/inter;i++)
+	for(i = 0;i<250/inter-1;i++)
 	{
 		lcd_huadian(i*inter,arr_plot[i],BLACK);
 		lcd_huaxian(i*inter,arr_plot[i],(i+1)*inter,arr_plot[i+1],BLACK);

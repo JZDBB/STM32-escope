@@ -23,10 +23,10 @@ int hor = 0;
 float arr_plot[250];
 int flag = 0;
 int inter = 0;
+int flag_mode = 0;
 
-
-static u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
-static u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
+u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
+u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
 
 //u8 arr_V[10] = "100mV/div";
 //u8 arr_f[10] = "  5us/div";
@@ -271,10 +271,9 @@ void EXTI4_IRQHandler(void)
 		{
 			
 		}
+		GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
+		GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
 	}
-	
-	GUI_Show12ASCII(94,210,arr_F[num_shao_miao-1],BLUE,YELLOW);
-	GUI_Show12ASCII(4,210,arr_V[num_fu_du-1],BLUE,YELLOW);
 	EXTI_ClearITPendingBit(EXTI_Line4);
 }
 

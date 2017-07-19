@@ -171,9 +171,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>348</LineNumber>
+          <LineNumber>131</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134222888</Address>
+          <Address>134221956</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -187,18 +187,34 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>131</LineNumber>
+          <LineNumber>237</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134221260</Address>
+          <Address>134238228</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\user\stm32f10x_it.c</Filename>
+          <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\app\adc\adc.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Template\stm32f10x_it.c\131</Expression>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>236</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134238220</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\app\adc\adc.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

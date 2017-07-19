@@ -21,8 +21,6 @@ float temp;
 float temp1;
 u32 frequen = 0;
 u8 arr_freq[8] = "0000000\0";
-//u16 USART_RX_STA=0;       //接收状态标记	
-//u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
 
 void clear_point(u16 hang)
 {
@@ -366,7 +364,7 @@ int main(void)
 				{
 					clear_inter(inter_b);
 				}
-				for(j=index2;j<index2+250/inter;j++)
+				for(j=index2;j<index2+250/inter-1;j++)
 				{
 					temp = a[j] * 3300 / 4096  *  25 /vcc_div;
 					temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
