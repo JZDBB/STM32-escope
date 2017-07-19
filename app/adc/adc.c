@@ -15,6 +15,7 @@ u16 index1 = 0;
 u8 flag_change = 0;
 u8 flag_50us = 0;
 int inter_b = 0;
+u8 multiple = 1;
 
 void DMA1_Init(void)
 {
@@ -86,7 +87,7 @@ void ADC_Get_Value(void)								 //得到数据，
 		//TIM_SetCompare1(TIM1, gao_pin_period);
 		//TIM_SetAutoreload(TIM1,gao_pin_period);	
 		
-		TIM_PrescalerConfig(TIM1,1,TIM_PSCReloadMode_Immediate);
+		TIM_PrescalerConfig(TIM1,55,TIM_PSCReloadMode_Immediate);
 		//TIM_SetCompare1(TIM1, (shao_miao_shu_du/25)-1);
 		TIM_SetAutoreload(TIM1, 1); //设定扫描速度
 	}
@@ -121,10 +122,9 @@ u16 ADC_Get_Vpp(void)
 		}			
 	} 	
 	pp = (float)(max_data-min_data);
-	pp = pp*(3300.0/4095);
+	pp = pp*(3300.0* multiple /4095);
 	return pp;	
 }
-
 
 void clear(void)
 {
@@ -205,8 +205,8 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 		
 		for(x=200+hor;x<hor+200+WIDE;x++)
 			{
-				value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-				value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+				value1 = a[x] * 3300 * multiple / 4096  *  25 /vcc_div + ver;
+				value = a[x + 1] * 3300 * multiple / 4096 * 25 / vcc_div + ver;
 				if(value1>HIGH)
 				{
 					value1=HIGH;	
@@ -234,10 +234,10 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 	{
 		i = 0;
 		clear_inter(inter_b);
-		for(x=200+hor;x<hor+200+WIDE/inter-1;x++)
+		for(x=200+hor;x<hor+200+WIDE/inter;x++)
 		{
-			value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-			value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+			value1 = a[x] * 3300 * multiple / 4096  *  25 /vcc_div + ver;
+			value = a[x + 1] * 3300 * multiple / 4096 * 25 / vcc_div + ver;
 			if(value1>HIGH)
 			{
 				value1=HIGH;	
@@ -267,7 +267,7 @@ void ADC_print(int ver, int hor)//,MoveStatus State)
 void clear_inter(int inter)
 {
 	int i;
-	for(i = 0;i<250/inter-1;i++)
+	for(i = 0;i<250/inter;i++)
 	{
 		lcd_huadian(i*inter,arr_plot[i],BLACK);
 		lcd_huaxian(i*inter,arr_plot[i],(i+1)*inter,arr_plot[i+1],BLACK);
@@ -284,8 +284,8 @@ void pause_plot(u16 ver, u16 hor)
 	POINT_COLOR = YELLOW;
 	for(x=200+hor;x<hor+200+WIDE;x++)
 	{
-		value1 = a[x] * 3300 / 4096  *  25 /vcc_div + ver;
-		value = a[x + 1] * 3300 / 4096 * 25 / vcc_div + ver;
+		value1 = a[x] * 3300 * multiple / 4096  *  25 /vcc_div + ver;
+		value = a[x + 1] * 3300 * multiple / 4096 * 25 / vcc_div + ver;
 		if(value1>HIGH)
 		{
 			value1=HIGH;	

@@ -167,28 +167,26 @@ void exti_init2()
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE);
 
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
 	GPIO_Init(GPIOE,&GPIO_InitStructure);
 	 
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource2);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource1);
 
-	EXTI_InitStructure.EXTI_Line=EXTI_Line2;
+	EXTI_InitStructure.EXTI_Line=EXTI_Line1;
 	EXTI_InitStructure.EXTI_Mode=EXTI_Mode_Interrupt;
 	EXTI_InitStructure.EXTI_Trigger=EXTI_Trigger_Falling;
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure); 
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);		 
-	NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn; 	//??EXTI2?????
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn; 	//??EXTI2?????
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //??????0
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		  //??????0
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 		  //??
 	NVIC_Init(&NVIC_InitStructure); 		
 }
-
-
 void time_init2()
 {
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;	 //?????????,?????GPIO
@@ -210,7 +208,36 @@ void time_init2()
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);	
 }
+void exti_init1() 
+{
 
+	GPIO_InitTypeDef GPIO_InitStructure;
+	EXTI_InitTypeDef EXTI_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE,&GPIO_InitStructure);
+	 
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource2);
+
+	EXTI_InitStructure.EXTI_Line=EXTI_Line2;
+	EXTI_InitStructure.EXTI_Mode=EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger=EXTI_Trigger_Falling;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure); 
+
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);		 
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn; 	//??EXTI2?????
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2; //??????0
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;		  //??????0
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 		  //??
+	NVIC_Init(&NVIC_InitStructure); 		
+}
 void USART3_Init(u32 bound)
 {
    //GPIO端口设置
@@ -271,16 +298,27 @@ void TIM3_IRQHandler()
 }
 
 
+void EXTI1_IRQHandler()	
+{
+
+	if(EXTI_GetITStatus(EXTI_Line1)==SET)
+
+	{
+   		EXTI_ClearITPendingBit(EXTI_Line1);
+		count++;
+	}		
+}
 void EXTI2_IRQHandler()	
 {
 
 	if(EXTI_GetITStatus(EXTI_Line2)==SET)
 
 	{
-   		EXTI_ClearITPendingBit(EXTI_Line2);
-		count++;
+   	EXTI_ClearITPendingBit(EXTI_Line12);
+		multiple = 1;
 	}		
 }
+
 int main(void)
 {	
 	u8 vpp_buf[7];
@@ -291,7 +329,7 @@ int main(void)
 	rcc_init();			   //外设时钟配置	
 	delay_init();
 	led_init();	
-	
+	exti_init1(); 
 	nvic_init();		   // 中断优先级配置
 	gpio_init();		   	//外设io口配置
 	key_init();
@@ -299,7 +337,6 @@ int main(void)
 	 
 	time_init();			//定时器配置，测频率用的二个定时器
 	time_enable();			//同步开始计数
-	ADC_Get_Value();
 	exti_init2();
 	time_init2();
 	TFT_Init();
@@ -307,6 +344,7 @@ int main(void)
 	set_background();	 	 //初始化背景
 	USART3_Init(9600);
 	
+	ADC_Get_Value();
 	vpp = ADC_Get_Vpp();
 	while(1)
 	{
@@ -318,8 +356,8 @@ int main(void)
 			{
 				for(j=index2;j<index2+250;j++)
 				{
-					temp = a[j] * 3300 / 4096  *  25 /vcc_div;
-					temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
+					temp = a[j] * 3300 * multiple / 4096  *  25 /vcc_div;
+					temp1 = a[j + 1] * 3300* multiple / 4096 * 25 / vcc_div;
 					if(temp>200)
 					{
 						temp=200;	
@@ -350,7 +388,7 @@ int main(void)
 					v_buf[4] = vol%10000%1000%100/10+48;
 					v_buf[5] = vol%10000%1000%100%10+48;
 					v_buf[6] = '\0';
-					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
+					GUI_Show12ASCII(272,22,v_buf,RED,BLACK);
 				}
 			}
 			else
@@ -364,10 +402,10 @@ int main(void)
 				{
 					clear_inter(inter_b);
 				}
-				for(j=index2;j<index2+250/inter-1;j++)
+				for(j=index2;j<index2+250/inter;j++)
 				{
-					temp = a[j] * 3300 / 4096  *  25 /vcc_div;
-					temp1 = a[j + 1] * 3300 / 4096 * 25 / vcc_div;
+					temp = a[j] * 3300 * multiple / 4096  *  25 /vcc_div;
+					temp1 = a[j + 1] * 3300 * multiple / 4096 * 25 / vcc_div;
 					if(temp>200)
 					{
 						temp=200;	
@@ -388,14 +426,14 @@ int main(void)
 					lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,YELLOW);
 					arr_plot[j-index2] = temp;
 					inter_b = inter;
-					vol = a[j + 1] * 3300 / 4095;
+					vol = a[j + 1] * 3300 * multiple / 4095;
 					v_buf[0] = vol/10000+48;
 					v_buf[1] = vol%10000/1000+48;
 					v_buf[3] = vol%10000%1000/100+48;
 					v_buf[4] = vol%10000%1000%100/10+48;
 					v_buf[5] = vol%10000%1000%100%10+48;
 					v_buf[6] = '\0';
-					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
+					GUI_Show12ASCII(272,22,v_buf,RED,BLACK);
 				}
 				hua_wang();
 				delay_ms(500);
@@ -406,8 +444,8 @@ int main(void)
 			vpp_buf[4]=vpp%10000%1000%100/10+0x30;
 			vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 			vpp_buf[6]='\0';
-			GUI_Show12ASCII(262,62,vpp_buf,RED,BLACK);
-			GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
+			GUI_Show12ASCII(272,62,vpp_buf,RED,BLACK);
+			GUI_Show12ASCII(272,112,arr_freq,RED,BLACK);
 			ADC_Get_Value();
 			vpp = ADC_Get_Vpp();
 		}
