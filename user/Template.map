@@ -31,7 +31,7 @@ Section Cross References
     main.o(.text) refers to adc.o(.bss) for a
     main.o(.text) refers to stm32f10x_it.o(.bss) for arr_plot
     main.o(.text) refers to gui.o(.text) for GUI_Show12ASCII
-    stm32f10x_it.o(.text) refers to stm32f10x_gpio.o(.text) for GPIO_ResetBits
+    stm32f10x_it.o(.text) refers to stm32f10x_gpio.o(.text) for GPIO_SetBits
     stm32f10x_it.o(.text) refers to gui.o(.text) for GUI_Dot
     stm32f10x_it.o(.text) refers to lcd_driver.o(.text) for TFT_ClearScreen
     stm32f10x_it.o(.text) refers to lcd_driver.o(.data) for POINT_COLOR

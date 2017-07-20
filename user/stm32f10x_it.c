@@ -39,51 +39,51 @@ float gain_num[8] = {0.05, 0.1, 0.2, 0.4, 8, 10, 20, 25};
 
 void set_io1(void)					  										
 {
-	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
 }
 void set_io2(void)					  										
 {
-	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
-	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
 }
 void set_io3(void)					  										
 {
-	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_SetBits(GPIOC,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
 }
 void set_io4(void)					  										
 {
+	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+}
+void set_io5(void)					  										
+{
 	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
 	GPIO_SetBits(GPIOC,GPIO_Pin_4);
 	GPIO_SetBits(GPIOC,GPIO_Pin_5);
 }
-void set_io5(void)					  										
-{
-	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
-}
 void set_io6(void)					  										
 {
-	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
-	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_SetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
 }
 void set_io7(void)					  										
 {
-	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_SetBits(GPIOC,GPIO_Pin_4);
-	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_SetBits(GPIOC,GPIO_Pin_5);
 }
 void set_io8(void)					  										
 {
-	GPIO_SetBits(GPIOC,GPIO_Pin_3);	
-	GPIO_SetBits(GPIOC,GPIO_Pin_4);
-	GPIO_SetBits(GPIOC,GPIO_Pin_5);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_3);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_4);
+	GPIO_ResetBits(GPIOC,GPIO_Pin_5);
 }
 void lcd_huadian(u16 a,u16 b,u16 color)
 {							    
@@ -575,19 +575,19 @@ void TIM2_IRQHandler(void)
 		
 		switch(C_dc_ac)
 		{
-			case 0:GPIO_ResetBits(GPIOC,GPIO_Pin_7);break;
-			case 1:GPIO_SetBits(GPIOC,GPIO_Pin_7);break;
+			case 0:GPIO_SetBits(GPIOC,GPIO_Pin_7);break;
+			case 1:GPIO_ResetBits(GPIOC,GPIO_Pin_7);break;
 			default: break;
 		}
 		
 		switch(change_gain)
 		{
 			case 0:
-				GPIO_ResetBits(GPIOC,GPIO_Pin_6);
+				GPIO_SetBits(GPIOC,GPIO_Pin_6);
 				multiple = 0.5*gain_num[gain-1];
 			break;
 			case 1:
-				GPIO_SetBits(GPIOC,GPIO_Pin_6);
+				GPIO_ResetBits(GPIOC,GPIO_Pin_6);
 				multiple = 0.05*gain_num[gain-1];
 			break;
 			default: break;
