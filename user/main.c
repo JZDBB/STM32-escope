@@ -42,7 +42,13 @@ void nvic_init(void)
 	NVIC_InitTypeStruct.NVIC_IRQChannelPreemptionPriority =	2;
 	NVIC_InitTypeStruct.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitTypeStruct.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitTypeStruct);				 
+	NVIC_Init(&NVIC_InitTypeStruct);
+
+	NVIC_InitTypeStruct.NVIC_IRQChannel = EXTI2_IRQn; 
+	NVIC_InitTypeStruct.NVIC_IRQChannelPreemptionPriority =	2;
+	NVIC_InitTypeStruct.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitTypeStruct.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitTypeStruct);	
 
 	NVIC_InitTypeStruct.NVIC_IRQChannel = EXTI3_IRQn; 
 	NVIC_InitTypeStruct.NVIC_IRQChannelPreemptionPriority =	2;
@@ -64,7 +70,7 @@ void nvic_init(void)
 
 	NVIC_InitTypeStruct.NVIC_IRQChannel = TIM3_IRQn; 
 	NVIC_InitTypeStruct.NVIC_IRQChannelPreemptionPriority =	0;
-	NVIC_InitTypeStruct.NVIC_IRQChannelSubPriority = 3;
+	NVIC_InitTypeStruct.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitTypeStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitTypeStruct);
 }
@@ -115,7 +121,7 @@ void gpio_init(void)
 	GPIO_InitTypeStruct.GPIO_Mode = GPIO_Mode_AIN;
 	GPIO_Init(GPIOA, &GPIO_InitTypeStruct);
 
-	GPIO_InitTypeStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4;
+	GPIO_InitTypeStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_2;
 	GPIO_InitTypeStruct.GPIO_Speed = GPIO_Speed_50MHz;		 		 //外部中断的io配置
 	GPIO_InitTypeStruct.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_Init(GPIOE, &GPIO_InitTypeStruct);
@@ -183,7 +189,7 @@ void exti_init2()
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);		 
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn; 	//??EXTI2?????
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //??????0
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		  //??????0
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;		  //??????0
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 		  //??
 	NVIC_Init(&NVIC_InitStructure); 		
 }
@@ -207,36 +213,6 @@ void time_init2()
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority=1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);	
-}
-void exti_init1() 
-{
-
-	GPIO_InitTypeDef GPIO_InitStructure;
-	EXTI_InitTypeDef EXTI_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
-
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE,ENABLE);
-
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_2;
-	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
-	GPIO_Init(GPIOE,&GPIO_InitStructure);
-	 
-	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource2);
-
-	EXTI_InitStructure.EXTI_Line=EXTI_Line2;
-	EXTI_InitStructure.EXTI_Mode=EXTI_Mode_Interrupt;
-	EXTI_InitStructure.EXTI_Trigger=EXTI_Trigger_Falling;
-	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-	EXTI_Init(&EXTI_InitStructure); 
-
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);		 
-	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn; 	//??EXTI2?????
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2; //??????0
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;		  //??????0
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 		  //??
-	NVIC_Init(&NVIC_InitStructure); 		
 }
 void USART3_Init(u32 bound)
 {
@@ -286,18 +262,15 @@ void TIM3_IRQHandler()
 	//freq=100;
 	frequen=count;
 	arr_freq[0] = frequen/1000000%10+48;
-		arr_freq[1] = frequen/100000%10+48;
-		arr_freq[2] = frequen/10000%10+48;
-		arr_freq[3] = frequen/1000%10+48;
-		arr_freq[4] = frequen/100%10+48;
-		arr_freq[5] = frequen/10%10+48;
-		arr_freq[6] = frequen%10+48;
-		arr_freq[7] = '\0';
-	
+	arr_freq[1] = frequen/100000%10+48;
+	arr_freq[2] = frequen/10000%10+48;
+	arr_freq[3] = frequen/1000%10+48;
+	arr_freq[4] = frequen/100%10+48;
+	arr_freq[5] = frequen/10%10+48;
+	arr_freq[6] = frequen%10+48;
+	arr_freq[7] = '\0';
 	count=0;	
 }
-
-
 void EXTI1_IRQHandler()	
 {
 
@@ -308,27 +281,24 @@ void EXTI1_IRQHandler()
 		count++;
 	}		
 }
-void EXTI2_IRQHandler()	
-{
-	delay_ms(10);
-	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)==0)
-	{
-   	multiple = 1;
-	}		
-	EXTI_ClearITPendingBit(EXTI_Line12);
-}
+
 
 int main(void)
 {	
 	u8 vpp_buf[7];
 	u8 v_buf[7];
+	u8 duty_buf[8];
 	u16 vol;
+	u16 duty = 0;
 	v_buf[2] = 46;
 	vpp_buf[2] = 46;
+	duty_buf[6] = 37;
+	duty_buf[0] = 32;
+	duty_buf[3] = 46;
+	duty_buf[7] = '\0';
 	rcc_init();			   //外设时钟配置	
 	delay_init();
 	led_init();	
-	exti_init1(); 
 	nvic_init();		   // 中断优先级配置
 	gpio_init();		   	//外设io口配置
 	key_init();
@@ -345,6 +315,7 @@ int main(void)
 	
 	ADC_Get_Value();
 	vpp = ADC_Get_Vpp();
+	duty = get_duty();
 	while(1)
 	{
 		POINT_COLOR = YELLOW;
@@ -380,7 +351,12 @@ int main(void)
 					arr_plot[i] = temp;
 					i++;
 					flag_50us = 0;
-					vol = a[j + 1] * 3300 / 4095;
+					duty_buf[1] = duty/1000%10+48;
+					duty_buf[2] = duty/100%10+48;
+					duty_buf[4] = duty/10%10+48;
+					duty_buf[5] = duty%10+48;
+					GUI_Show12ASCII(262,142,duty_buf,RED,BLACK);
+					vol = a[j + 1] * 3300 *multiple/ 4095;
 					v_buf[0] = vol/10000+48;
 					v_buf[1] = vol%10000/1000+48;
 					v_buf[3] = vol%10000%1000/100+48;
@@ -388,6 +364,7 @@ int main(void)
 					v_buf[5] = vol%10000%1000%100%10+48;
 					v_buf[6] = '\0';
 					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
+					GUI_Show12ASCII(262,102,arr_freq,RED,BLACK);
 				}
 			}
 			else
@@ -425,6 +402,11 @@ int main(void)
 					lcd_huaxian((j-index2)*inter,temp,(j-index2+1)*inter,temp1,YELLOW);
 					arr_plot[j-index2] = temp;
 					inter_b = inter;
+					duty_buf[1] = duty/1000%10+48;
+					duty_buf[2] = duty/100%10+48;
+					duty_buf[4] = duty/10%10+48;
+					duty_buf[5] = duty%10+48;
+					GUI_Show12ASCII(262,142,duty_buf,RED,BLACK);
 					vol = a[j + 1] * 3300 * multiple / 4095;
 					v_buf[0] = vol/10000+48;
 					v_buf[1] = vol%10000/1000+48;
@@ -433,6 +415,7 @@ int main(void)
 					v_buf[5] = vol%10000%1000%100%10+48;
 					v_buf[6] = '\0';
 					GUI_Show12ASCII(262,22,v_buf,RED,BLACK);
+					GUI_Show12ASCII(262,102,arr_freq,RED,BLACK);
 				}
 				hua_wang();
 				delay_ms(500);
@@ -444,9 +427,9 @@ int main(void)
 			vpp_buf[5]=vpp%10000%1000%100%10+0x30;
 			vpp_buf[6]='\0';
 			GUI_Show12ASCII(262,62,vpp_buf,RED,BLACK);
-			GUI_Show12ASCII(262,112,arr_freq,RED,BLACK);
 			ADC_Get_Value();
 			vpp = ADC_Get_Vpp();
+			duty = get_duty();
 		}
 	}
 }

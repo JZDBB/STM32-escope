@@ -17,6 +17,8 @@ u8 flag_50us = 0;
 int inter_b = 0;
 float multiple = 1;
 int mode_hard = 0;
+u32 max_data = 0;
+u32 min_data = 0;
 
 void DMA1_Init(void)
 {
@@ -106,10 +108,10 @@ void ADC_Get_Value(void)								 //得到数据，
 
 u16 ADC_Get_Vpp(void)	   
 {
-	u32 max_data=a[0];
-	u32 min_data=a[0];
 	u32 n=0;
 	float pp=0;
+	max_data=a[0];
+	min_data=a[0];
 	for(n = 1;n<320;n++)
 	{
 		if(a[n]>max_data)
@@ -125,6 +127,23 @@ u16 ADC_Get_Vpp(void)
 	pp = (float)(max_data-min_data);
 	pp = pp*(3300.0* multiple /4095);
 	return pp;	
+}
+
+u16 get_duty(void)
+{
+		u32 mid = 0;
+	u32 i = 0;
+	u16 duty = 0;
+	mid = (max_data+min_data)/2;
+	for(i = 1;i<640;i++)
+	{
+		if(a[i]>mid)
+		{
+			duty++;
+		}
+	}
+	duty = duty * 10000 / 640;
+	return duty;
 }
 
 void clear(void)

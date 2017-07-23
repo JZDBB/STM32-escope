@@ -13,7 +13,8 @@
 extern u8 frequency_flag;
 extern long int shao_miao_shu_du;
 extern u8 num_shao_miao;
-extern u8 mode;
+extern u8 mode1;
+extern u8 mode2;
 extern u8 num_fu_du;
 extern u8 ad_flag;
 extern u16 vpp;
@@ -21,6 +22,7 @@ extern float gao_pin_palus;
 extern u16 vcc_div;
 extern u16 interval;
 extern int flag;
+extern int flag_mode;
 extern float arr_plot[250];
 extern int inter;
 extern int gain;
@@ -31,6 +33,8 @@ extern u8 arr_F[13][11];
 extern u8 arr_V[6][11];
 extern u8 arr_gain[8][6];
 extern u8 arr_JDQ[2][3];
+extern float gain_multiple0[8];
+extern float gain_multiple1[8];
 //extern u8 arr_move[2][10];
 
 

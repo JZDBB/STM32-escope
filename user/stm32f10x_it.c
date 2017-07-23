@@ -13,7 +13,8 @@
 u8 frequency_flag = 0;
 long int shao_miao_shu_du = 0;
 u8 num_shao_miao = 5;
-u8 mode = 0;
+u8 mode1 = 0;
+u8 mode2 = 0;
 u8 num_fu_du =3;
 float gao_pin_palus = 0;
 u16 vcc_div = 0;
@@ -26,7 +27,7 @@ int inter = 0;
 int flag_mode = 0;
 int gain = 1;
 u8 C_dc_ac = 0;
-u8 change_gain = 1;
+u8 change_gain = 0;
 
 u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
 u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
@@ -36,6 +37,8 @@ u8 arr_C[2][10] = {" AC\0", " DC\0"};
 u8 arr_move[2][10] ={" mov_hor\0"," mov_ver\0"};
 u8 arr_JDQ[2][3] = {" 0\0"," 1\0"};
 float gain_num[8] = {0.05, 0.1, 0.2, 0.4, 8, 10, 20, 25};
+float gain_multiple0[8] = {0.03,0.059,0.12,0.22,0.43,0.51,0.98,2.5};
+float gain_multiple1[8] = {0.23,0.45,0.93,1.725,3.25,3.9,7.5,25};
 
 void set_io1(void)					  										
 {
@@ -136,8 +139,8 @@ void set_background(void)
 	//GUI_Show12ASCII(262,210,"Vmax:",POINT_COLOR,YELLOW);
 	//GUI_Show12ASCII(262,210,"Vmin:",POINT_COLOR,YELLOW);
 	GUI_Show12ASCII(262,45,"Vpp(V):",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(262,95,"Freq(Hz):",POINT_COLOR,BLACK);
-	GUI_Show12ASCII(262,145,"duty(%):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(262,85,"Freq(Hz):",POINT_COLOR,BLACK);
+	GUI_Show12ASCII(262,125,"duty(%):",POINT_COLOR,BLACK);
 	
 	POINT_COLOR=BLUE;
 	LCD_DrawRectangle(348,0,399,200,WHITE);
@@ -190,6 +193,13 @@ void key_init(void)
 	EXTI_InitTypeStruct.EXTI_Trigger = EXTI_Trigger_Falling;
 	EXTI_InitTypeStruct.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitTypeStruct);
+	
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOE, GPIO_PinSource2);	  //K_LEFT
+	EXTI_InitTypeStruct.EXTI_Line = EXTI_Line2;
+	EXTI_InitTypeStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitTypeStruct.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_InitTypeStruct.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitTypeStruct);
 }
 
 void load_data()
@@ -206,31 +216,28 @@ void load_data()
 
 void EXTI0_IRQHandler(void)
 {
-	u16 yan_se1;
 	delay_ms(10);
-	yan_se1 = POINT_COLOR;
-	POINT_COLOR=RED;
 	if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0))
 	{
-		mode++;
+		mode1++;
 		led0=0;
-		if(mode == 8)mode = 0;
-		if(mode == 0)
+		flag_mode = 0;
+		if(mode1 == 5)mode1 = 0;
+		if(mode1 == 0)
 		{
-			LCD_DrawRectangle(351,76,396,112,BLUE);
 			LCD_DrawRectangle(2,205,76,230,RED);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
 			LCD_DrawRectangle(272,205,346,230,YELLOW);
 		}
-		else if(mode == 1)
+		else if(mode1 == 1)
 		{
 			LCD_DrawRectangle(2,205,76,230,YELLOW);
 			LCD_DrawRectangle(92,205,166,230,RED);
 			LCD_DrawRectangle(182,205,256,230,YELLOW);
 			LCD_DrawRectangle(272,205,346,230,YELLOW);
 		}
-		else if(mode ==2)
+		else if(mode1 ==2)
 		{
 			LCD_DrawRectangle(2,205,76,230,YELLOW);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
@@ -242,7 +249,7 @@ void EXTI0_IRQHandler(void)
 			//pause_plot(ver, hor);
 			ADC_print(ver, hor);		
 		}
-		else if(mode ==3)
+		else if(mode1 ==3)
 		{
 			LCD_DrawRectangle(2,205,76,230,YELLOW);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
@@ -255,7 +262,7 @@ void EXTI0_IRQHandler(void)
 			//pause_plot(ver, hor);
 			ADC_print(ver, hor);
 		}
-		else if(mode ==4)
+		else if(mode1 ==4)
 		{
 			LCD_DrawRectangle(2,205,76,230,YELLOW);
 			LCD_DrawRectangle(92,205,166,230,YELLOW);
@@ -268,29 +275,39 @@ void EXTI0_IRQHandler(void)
 			ver = 0;
 			hor = 0;
 		}
-		else if(mode ==5)
+	}
+	EXTI_ClearITPendingBit(EXTI_Line0);
+}	   
+
+void EXTI2_IRQHandler()	
+{
+	delay_ms(100);
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)==0)
+	{
+   	mode2++;
+		flag_mode = 1;
+		if(mode2 ==3)mode2 = 0;
+		if(mode2 ==0)
 		{
-			LCD_DrawRectangle(272,205,346,230,YELLOW);
 			LCD_DrawRectangle(351,2,396,20,WHITE);
 			LCD_DrawRectangle(351,30,396,66,BLUE);
 			LCD_DrawRectangle(351,76,396,112,BLUE);
 		}
-		else if(mode ==6)
+		else if(mode2 ==1)
 		{
 			LCD_DrawRectangle(351,2,396,20,BLUE);
 			LCD_DrawRectangle(351,30,396,66,WHITE);
 			LCD_DrawRectangle(351,76,396,112,BLUE);
 		}
-		else if(mode ==7)
+		else if(mode2 ==2)
 		{
 			LCD_DrawRectangle(351,2,396,20,BLUE);
 			LCD_DrawRectangle(351,30,396,66,BLUE);
 			LCD_DrawRectangle(351,76,396,112,WHITE);
 		}
-	}
-	EXTI_ClearITPendingBit(EXTI_Line0);
-	POINT_COLOR = yan_se1;
-}	   
+	}		
+	EXTI_ClearITPendingBit(EXTI_Line2);
+}
 
 void EXTI3_IRQHandler(void)
 {
@@ -298,31 +315,31 @@ void EXTI3_IRQHandler(void)
 	led1=0;
 	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)==0)
 	{
-		if(mode == 0)
+		if(mode1 == 0 & flag_mode==0)
 		{
 			num_fu_du++;
 			if(num_fu_du==7)num_fu_du=1;
 		}
-		else if(mode==1)
+		else if(mode1==1&flag_mode==0)
 		{	
 			num_shao_miao++;
 			if(num_shao_miao == 14)num_shao_miao = 1;
 		}
-		else if(mode==2)
+		else if(mode1==2& flag_mode==0)
 		{
 			hor = hor+10;
 			ADC_print(ver,hor);
 		}
-		else if(mode==3)
+		else if(mode1==3& flag_mode==0)
 		{
 			ver = ver+10;
 			ADC_print(ver,hor);
 		}
-		else if(mode==4)
+		else if(mode1==4& flag_mode==0)
 		{
 			load_data();
 		}
-		else if(mode ==5)
+		else if(mode2 ==0& flag_mode==1)
 		{
 			if(C_dc_ac ==0)
 			{
@@ -333,7 +350,7 @@ void EXTI3_IRQHandler(void)
 				C_dc_ac =0;
 			}
 		}
-		else if(mode==6)
+		else if(mode2==1& flag_mode==1)
 		{
 			if(change_gain ==0)
 			{
@@ -344,7 +361,7 @@ void EXTI3_IRQHandler(void)
 				change_gain =0;
 			}
 		}
-		else if(mode ==7)
+		else if(mode2 ==2& flag_mode==1)
 		{
 			gain++;
 			if(gain==9)gain = 1;
@@ -364,39 +381,39 @@ void EXTI4_IRQHandler(void)
 	led2=0;
 	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_4)==0)
 	{
-		if(mode == 0)
+		if(mode1 == 0& flag_mode==0)
 		{
 			num_fu_du--;
 			if(num_fu_du==0)num_fu_du=6;
 		}
-		else if(mode==1)
+		else if(mode1==1& flag_mode==0)
 		{	
 			num_shao_miao--;
 			if(num_shao_miao == 0)num_shao_miao = 13;
 		}
-		else if(mode==2)
+		else if(mode1==2& flag_mode==0)
 		{
 			hor = hor-10;
 			ADC_print(ver,hor);
 		}
-		else if(mode==3)
+		else if(mode1==3& flag_mode==0)
 		{
 			ver = ver-10;
 			ADC_print(ver,hor);
 		}
-		else if(mode==4)
+		else if(mode1==4& flag_mode==0)
 		{
 			
 		}
-		else if(mode ==5)
+		else if(mode2 ==0& flag_mode==1)
 		{
 			
 		}
-		else if(mode==6)
+		else if(mode2==1& flag_mode==1)
 		{
 			
 		}
-		else if(mode ==7)
+		else if(mode2 ==2& flag_mode==1)
 		{
 			gain--;
 			if(gain==0)gain = 8;
@@ -560,19 +577,6 @@ void TIM2_IRQHandler(void)
 
 		POINT_COLOR=yan_se;*/
 		
-		switch(gain)
-		{	
-			case 1:set_io1();break;
-			case 2:set_io2();break;
-			case 3:set_io3();break;
-			case 4:set_io4();break;
-			case 5:set_io5();break;
-			case 6:set_io6();break;
-			case 7:set_io7();break;
-			case 8:set_io8();break;
-			default :break;
-		}
-		
 		switch(C_dc_ac)
 		{
 			case 0:GPIO_SetBits(GPIOC,GPIO_Pin_7);break;
@@ -584,16 +588,38 @@ void TIM2_IRQHandler(void)
 		{
 			case 0:
 				GPIO_SetBits(GPIOC,GPIO_Pin_6);
-				multiple = 0.5*gain_num[gain-1];
+				switch(gain)
+				{	
+					case 1:set_io1();break;
+					case 2:set_io2();break;
+					case 3:set_io3();break;
+					case 4:set_io4();break;
+					case 5:set_io5();break;
+					case 6:set_io6();break;
+					case 7:set_io7();break;
+					case 8:set_io8();break;
+					default :break;
+				}
+				multiple =1/(gain_multiple0[gain-1]);
 			break;
 			case 1:
 				GPIO_ResetBits(GPIOC,GPIO_Pin_6);
-				multiple = 0.05*gain_num[gain-1];
+				switch(gain)
+				{	
+					case 1:set_io1();break;
+					case 2:set_io2();break;
+					case 3:set_io3();break;
+					case 4:set_io4();break;
+					case 5:set_io5();break;
+					case 6:set_io6();break;
+					case 7:set_io7();break;
+					case 8:set_io8();break;
+					default :break;
+				}
+				multiple =1/(gain_multiple1[gain-1]);
 			break;
 			default: break;
-		}
-		
-		
+		}	
 		
 		TIM_SetCounter(TIM2,0);
 		TIM_Cmd(TIM2,ENABLE);

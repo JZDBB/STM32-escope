@@ -12,10 +12,13 @@ extern u8 flag_50us;
 extern int inter_b;
 extern float multiple;
 extern int mode_hard; 
+extern u32 max_data;
+extern u32 min_data;
 
 void ADC1_Init(void);
 void ADC_Get_Value(void);
 u16 ADC_Get_Vpp(void);
+u16 get_duty(void);
 void clear(void);
 void ADC_print(int ver, int hor);
 void clear_inter(int inter);
