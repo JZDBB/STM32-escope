@@ -171,25 +171,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>131</LineNumber>
+          <LineNumber>427</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134221956</Address>
+          <Address>134221594</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\user\stm32f10x_it.c</Filename>
+          <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\user\main.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>237</LineNumber>
+          <LineNumber>147</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134238228</Address>
+          <Address>134240068</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -198,60 +198,44 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\app\adc\adc.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>236</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134238220</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>C:\Users\ynbb\Desktop\鐢佃\绠€鏄撶ず娉㈠櫒\app\adc\adc.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\Template\../app/adc/adc.c\147</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>a[0]</ItemText>
+          <ItemText>max_data</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ver</ItemText>
+          <ItemText>min_data</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>arr_plot[i-1]</ItemText>
+          <ItemText>a[i]</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>i</ItemText>
+          <ItemText>duty</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>arr_plot[4]</ItemText>
+          <ItemText>i</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>arr_plot[5]</ItemText>
+          <ItemText>a[i+1]</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>arr_plot[6]</ItemText>
+          <ItemText>mid</ItemText>
         </Ww>
         <Ww>
           <count>7</count>

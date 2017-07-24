@@ -30,15 +30,17 @@ u8 C_dc_ac = 0;
 u8 change_gain = 0;
 
 u8 arr_F[13][11] = {"  5us/div\0"," 10us/div\0"," 20us/div\0"," 50us/div\0","100us/div\0","200us/div\0","500us/div\0","  1ms/div\0","  2ms/div\0","  5ms/div\0"," 10ms/div\0"," 20ms/div\0"," 50ms/div\0"};
-u8 arr_V[6][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0"};
+u8 arr_V[7][11] = {"100mV/div\0","200mV/div\0","500mV/div\0","   1V/div\0","   2V/div\0","   5V/div\0","  10V/div\0"};
 u8 arr_gain[8][6] = {"0 0 0\0","0 0 1\0","0 1 0\0","0 1 1\0","1 0 0\0","1 0 1\0","1 1 0\0","1 1 1\0"};
 u8 arr_C[2][10] = {" AC\0", " DC\0"};
 //u8 arr_f[10] = "  5us/div";
 u8 arr_move[2][10] ={" mov_hor\0"," mov_ver\0"};
 u8 arr_JDQ[2][3] = {" 0\0"," 1\0"};
 float gain_num[8] = {0.05, 0.1, 0.2, 0.4, 8, 10, 20, 25};
-float gain_multiple0[8] = {0.03,0.059,0.12,0.22,0.43,0.51,0.98,2.5};
-float gain_multiple1[8] = {0.23,0.45,0.93,1.725,3.25,3.9,7.5,25};
+float gain_multiple0[8] = {0.036,0.063,0.12,0.226,0.49,0.57,1.13,3};
+float gain_multiple1[8] = {0.264,0.54,1.05,2.2,4.2,5.2,9.85,24};
+u8 show_gain0[8][8] = {"0.025\0","0.05 \0","0.1  \0","0.2  \0","0.4  \0","0.5  \0","1    \0","2.5  \0"};
+u8 show_gain1[8][8] = {"0.25 \0","0.5  \0","1    \0","2    \0","4    \0","5    \0","10   \0","25   \0"};
 
 void set_io1(void)					  										
 {
@@ -318,7 +320,7 @@ void EXTI3_IRQHandler(void)
 		if(mode1 == 0 & flag_mode==0)
 		{
 			num_fu_du++;
-			if(num_fu_du==7)num_fu_du=1;
+			if(num_fu_du==8)num_fu_du=1;
 		}
 		else if(mode1==1&flag_mode==0)
 		{	
@@ -384,7 +386,7 @@ void EXTI4_IRQHandler(void)
 		if(mode1 == 0& flag_mode==0)
 		{
 			num_fu_du--;
-			if(num_fu_du==0)num_fu_du=6;
+			if(num_fu_du==0)num_fu_du=7;
 		}
 		else if(mode1==1& flag_mode==0)
 		{	
@@ -496,6 +498,7 @@ void TIM2_IRQHandler(void)
 			case 4:vcc_div=1000;break;
 			case 5:vcc_div=2000;break;
 			case 6:vcc_div=5000;break;
+			case 7:vcc_div=10000;break;
 			default :break;
 		}
 
@@ -601,6 +604,7 @@ void TIM2_IRQHandler(void)
 					default :break;
 				}
 				multiple =1/(gain_multiple0[gain-1]);
+				GUI_Show12ASCII(354,150,show_gain0[gain-1],BLUE,BLACK);
 			break;
 			case 1:
 				GPIO_ResetBits(GPIOC,GPIO_Pin_6);
@@ -617,10 +621,10 @@ void TIM2_IRQHandler(void)
 					default :break;
 				}
 				multiple =1/(gain_multiple1[gain-1]);
+				GUI_Show12ASCII(354,150,show_gain1[gain-1],BLUE,BLACK);
 			break;
 			default: break;
 		}	
-		
 		TIM_SetCounter(TIM2,0);
 		TIM_Cmd(TIM2,ENABLE);
 	}
